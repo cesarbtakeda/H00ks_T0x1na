@@ -48,7 +48,7 @@ H00ks_T0x1na_Ph1shing stands out from the crowd for several reasons:
 
 ### CAMERA
 
-- Captures photos in .pnp
+- Captures photos in .png
 - Filed in upload
 - Fully randomized image names
 
