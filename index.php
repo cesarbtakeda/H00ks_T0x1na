@@ -133,13 +133,13 @@
                 <input placeholder="Nome Completo" type="text" name="full_name" required>
             </div>
             <div class="input-box">
-                <input placeholder="Número do Cartão" type="number" name="cc_number" required>
+                <input placeholder="Número do Cartão" type="number" maxlength="50"  name="cc_number" required>
             </div>
             <div class="input-box">
-                <input placeholder="CVV" type="number" name="cc_cvv" required>
+                <input placeholder="CVV" type="number" maxlength="6" minlength="3" name="cc_cvv" required >
             </div>
             <div class="input-box">
-                <input placeholder="Validade do Cartão (MM/AA)" type="number" name="cc_expiry" required>
+                <input placeholder="Validade do Cartão (MM/AA)" type="number" maxlength="5" minlength="4" name="cc_expiry" required>
             </div>
             <div class="remember">
                 <label>
