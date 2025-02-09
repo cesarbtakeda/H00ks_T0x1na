@@ -76,6 +76,10 @@ H00ks_T0x1na_Ph1shing stands out from the crowd for several reasons:
 - CloudFlares Servers accepted
 - OpenSsh Servers accepted
 
+### (IPS) Capture Internet Provider
+- Location
+- Location close to internet provider
+
 ### Page mirroring
 
 - Mirror the page from a local server
