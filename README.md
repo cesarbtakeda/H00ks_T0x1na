@@ -24,6 +24,8 @@ cd /var/www/html/page && php -S localhost:8080
 ```
 cd /var/www/html/page && cloudflare tunnel --url localhost:8080
 ```
+### Etical Disclamer
+Remember that this was made for ethical and moral use, I am not responsible for the misuse of the tool!
 
 
 ## What H00ks_T0x1na_Ph1shing Apart
