@@ -51,7 +51,7 @@ $c
 
 #instalando cloudflare
 echo "[**Baixando CloudFlare**]"
-curl -O https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudflared-fips-linux-amd64 && chmod +x cloudflared-fips-linux-amd64
+wget https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudflared-fips-linux-amd64 && chmod +x cloudflared-fips-linux-amd64
 mv cloudflared-fips-linux-amd64 cloudflare
 mv cloudflare /usr/local/bin/
 echo "[**CloudFlare baixado!!**]"
