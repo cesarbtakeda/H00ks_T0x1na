@@ -1,9 +1,9 @@
 #!/bin/bash
-#variaveis
-c="clear"
-i="sudo apt-get install "
-p="sudo pip3 install"
 
+# Variáveis
+c="clear"
+i="sudo apt-get install -y"
+p="sudo pip3 install"
 b="--break-system-package"
 px="pipx install xyz"
 
@@ -11,57 +11,57 @@ echo "[**Atualizando arquivos...**]"
 sudo apt-get update -y && sudo apt-get full-upgrade -y
 echo "[**Atualização completa**] "
 $c
+
 echo "[**Baixando dependências do Ameba...**]"
 
 # Instalação de pacotes
-$i python3-pip -y
-$i docker-cli -y
-$i apksigner -y
-$i python2 -y 
-$i python3 -y 
-$i golang-go -y
-$i git -y 
-$i nmap -y 
-$i nikto -y 
-$i whatweb -y 
-$i nuclei -y 
-$i subfinder -y 
-$i gobuster -y 
-$i wpscan -y 
-$i sherlock -y 
-$i proxychains4 -y 
-$i ettercap-text-only -y 
-$i wget -y 
-$i whois -y
-$i veil -y
-$i hashcat -y
-$i wordlists -y
-$i set -y
-$i httpx -y
-$i pipx -y
-$i systemctl -y
-$i postgresql -y
-$i apache2 -y
-$i tor -y
-$i veil -y
-$i apktool -y
-$i metagoofil -y
-$i make -y
+$i python3-pip
+$i docker-cli
+$i apksigner
+$i python2
+$i python3
+$i golang-go
+$i git
+$i nmap
+$i nikto
+$i whatweb
+$i nuclei
+$i subfinder
+$i gobuster
+$i wpscan
+$i sherlock
+$i proxychains4
+$i ettercap-text-only
+$i wget
+$i whois
+$i veil
+$i hashcat
+$i wordlists
+$i set
+$i httpx
+$i pipx
+$i systemctl
+$i postgresql
+$i apache2
+$i tor
+$i apktool
+$i metagoofil
+$i make
 $c
 
-#instalando cloudflare
+# Instalando Cloudflare
 echo "[**Baixando CloudFlare**]"
-wget https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudflared-fips-linux-amd64 && chmod +x cloudflared-fips-linux-amd64
-mv cloudflared-fips-linux-amd64 cloudflare
-mv cloudflare /usr/local/bin/
+wget https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudflared-fips-linux-amd64 -O cloudflare
+chmod +x cloudflare
+sudo mv cloudflare /usr/local/bin/
 echo "[**CloudFlare baixado!!**]"
 
-
-
-#Instalando uro
-echo "[**Fazendo o donwload do uro.**]"
+# Instalando uro
+echo "[**Fazendo o download do uro.**]"
 $p uro $b
 echo "[**Download do uro finalizado!**]"
+
+# Instalando ferramentas de Phishing
 echo "[**Fazendo download de ferramentas de Phishing**]"
 $p maxphisher $b
 $p colorama $b
@@ -75,27 +75,32 @@ $c
 
 # Clonando repositório NucleiFuzzer e executando instalação
 if [ ! -d "NucleiFuzzer" ]; then
+  echo "[**Clonando NucleiFuzzer**]"
   sudo git clone https://github.com/0xKayala/NucleiFuzzer.git
-  cd NucleiFuzzer
+  cd NucleiFuzzer || exit
   sudo chmod +x install.sh && ./install.sh
   cd ..
-  nf
 else
   echo "[**Repositório NucleiFuzzer já clonado e pronto para funcionar!**]"
 fi
 $c
+
 echo "[**Dependências baixadas com sucesso**]"
 $c
-echo "[**Movendo o Toxina Phishing para o apache2**]"
-mkdir /var/www/html/page
-cp -r * /var/www/html/page
+
+# Movendo Toxina Phishing para o Apache2
+echo "[**Movendo o Toxina Ph1shing para o Apache2**]"
+sudo mkdir -p /var/www/html/page
+sudo cp -r * /var/www/html/page
 touch arquivo.exe
-systemctl start apache2
-systemctl enable apache2.service
+sudo systemctl start apache2
+sudo systemctl enable apache2
 echo "[**Toxina Ph1shing movido com sucesso!**]"
 $c
 
+# Atualização final e limpeza do sistema
 sudo apt-get update -y && sudo apt-get full-upgrade -y
 sudo apt-get autoremove -y
 $c
+
 echo "[**A atualização foi concluída com sucesso**]"
