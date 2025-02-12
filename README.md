@@ -4,7 +4,7 @@
 <img src="./logo.jpg" width=200 alt=" Logo"/>
 </p>
 <span>
-H00ks_T0x1na_Ph1shing is a Phishing (Social Engineering) tool used to remotely control a computer or a mobile phone from links as a helper. It is written in HTML, CSS, PHP, JavaScript, BashScript and is compatible with Windows, Android and probably iPhone. It was created to be stable, completely open source, easy to use and with many customizable features. Improvements added in V2.0, Beef-xss is already pre-configured for use, improvements added to capture the internet provider, but you will have to choose between capturing browser cookies or the form that is there... Bug of 502 or 402, 403 denied fixed (modern browsers end up not accepting the php request, so I configured the page headers so that it would work without its limitation) </span> </br> </br>
+H00ks_T0x1na_Ph1shing is a Phishing (Social Engineering) tool used to remotely control a computer or a mobile phone from links as a helper. It is written in HTML, CSS, PHP, JavaScript, BashScript and is compatible with Windows, Android and probably iPhone. It was created to be stable, completely open source, easy to use and with many customizable features. Improvements added in the Alpha 0.1 version... Now having an internal API of models, where there will be a "graphical interface" "setup.sh" where the user can choose the Specific social engineering or choose the complete one, number 2 is still under development.... </span> </br> </br>
 
 ### How do I use this tool? 
 ```
