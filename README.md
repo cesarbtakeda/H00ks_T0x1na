@@ -9,7 +9,7 @@ H00ks_T0x1na_Ph1shing is a Phishing (Social Engineering) tool used to remotely c
 ### How do I use this tool? 
 ### How do I use this tool? 
 ```
-sudo su && git clone https://github.com/cesarbtakda/H00ks_T0x1na_Ph1shing.git
+sudo git clone https://github.com/cesarbtakda/H00ks_T0x1na_Ph1shing.git
 ```
 ```
 cd H00ks_T0x1na_Ph1shing && ./requeriments.sh
@@ -23,6 +23,8 @@ cd H00ks_T0x1na_Ph1shing && ./requeriments.sh
 ```
 cd /var/wwww/html/page-fake && cat dados.txt
 ```
+### It only works in Linux environment
+
 
 ### Etical Disclamer
 Remember that this was made for ethical and moral use, I am not responsible for the misuse of the tool!
@@ -87,6 +89,14 @@ H00ks_T0x1na_Ph1shing stands out from the crowd for several reasons:
 - Mirror the page from a local server
 - Nginx
 - Apache2
+
+
+### Examples:
+
+![image](https://github.com/user-attachments/assets/c467be4c-0a8c-44a6-8da3-2506a57f2456)
+-
+![image](https://github.com/user-attachments/assets/7c24d99f-b8a0-45d6-ab93-9e3e3625e40f)
+
 
 
 ## Issues, Bugs and Contributions
