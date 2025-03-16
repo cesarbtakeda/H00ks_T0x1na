@@ -19,6 +19,7 @@ echo "[** Modelo criado com sucesso **]"
 
 # Função RAT antes de tudo
 rat() {
+    $c
     read -p "Deseja colocar um rat no link? (caso queira)? [S/N]: " rat
     if [[ "$rat" =~ ^[Ss]$ || -z "$rat" ]]; then  # Aceita "S", "s" ou Enter como "sim"
         read -p "Qual caminho da pasta do rat?: " rat_dir
@@ -46,19 +47,19 @@ $c  # Só limpa a tela depois da pergunta do RAT
 # Função para exibir o menu principal
 show_model_menu() {
     $c
-    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
-    echo -e "${YELLOW}|                                                                      |${NC}"
+    echo -e "${GREEN}+______________________________________________________________________+${GREEN}"
+    echo -e "${RED}|                                                                      |${RED}"
     echo -e "${YELLOW}|            ${GREEN}[**Escolha qual tipo de EG.S você deseja**]${NC}               ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
-    echo -e "${YELLOW}|                                                                      |${NC}"     
-    echo -e "${YELLOW}|   1 --------------------------------->> ${GREEN}Standart${NC}                     ${YELLOW}|${NC}"         
-    echo -e "${YELLOW}+_____________________________________________________________________+${NC}"
-    echo -e "${YELLOW}|                                                                      |${NC}"                     
-    echo -e "${YELLOW}|   2 ------------------>> ${GREEN}Captura de cookies Beta${NC}                     ${YELLOW}|${NC}"
-    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
-    echo -e "${YELLOW}|                                                                      |${NC}"
+    echo -e "${RED}+______________________________________________________________________+${GREEN}"
+    echo -e "${RED}|                                                                      |${RED}"     
+    echo -e "${YELLOW}|   1 --------------------------------->> ${RED}Standart${NC}                     ${YELLOW}|${NC}"         
+    echo -e "${YELLOW}+______________________________________________________________________+${GREEN}"
+    echo -e "${RED}|                                                                      ${YELLOW}|${NC}"                     
+    echo -e "${YELLOW}|   2 ------------------>> ${YELLOW}Captura de cookies Beta${NC}                     ${YELLOW}|${NC}"
+    echo -e "${GREEN}+______________________________________________________________________+${GREEN}"
+    echo -e "${RED}|                                                                      |${RED}"
     echo -e "${YELLOW}|   0 -------->> ${RED}Sair${NC}                                                  ${YELLOW}|${NC}" 
-    echo -e "${YELLOW}+______________________________________________________________________+${NC}"
+    echo -e "${RED}+______________________________________________________________________+${GREEN}"
     echo -e " 
     "
 }
