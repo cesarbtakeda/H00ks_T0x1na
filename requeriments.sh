@@ -17,6 +17,7 @@ echo "[**Baixando dependências do Ameba...**]"
 # Instalação de pacotes
 $i python3-pip
 $i docker-cli
+$i php-curl
 $i apksigner
 $i python2
 $i python3
