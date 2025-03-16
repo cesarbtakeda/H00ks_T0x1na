@@ -1,4 +1,4 @@
-# Alpha H00ks_T0x1na_Ph1shing V0.2
+# Alpha H00ks_T0x1na_Ph1shing V1.1
 
 <p align='center'>
 <img src="./logo.jpg" width=200 alt=" Logo"/>
