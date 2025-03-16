@@ -147,11 +147,10 @@ process_model_choice() {
     case $1 in
         1)
             echo -e "${GREEN}Você escolheu: Standart${NC}"
-            cp "$type_egs/index.php" "$apache"
+            cp -r "$type_egs" "$apache"
             echo "[** Script carregado com sucesso no apache **]"
             cp -r "$type_egs/exploits/" "$apache"
             echo "[** Exploits carregados com sucesso no apache **]"
-            cp "$type_egs/dados.txt" "$apache"
             echo "[** Dados carregados com sucesso **]"
             chmod +x "$apache/"* # Nivel de permissão de arquivos
             cd "$apache"
