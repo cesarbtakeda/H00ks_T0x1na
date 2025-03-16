@@ -65,17 +65,6 @@ $p sockets $b
 $p requests $b
 $c
 
-
-# Movendo Toxina Phishing para o Apache2
-echo "[**Movendo o Toxina Ph1shing para o Apache2**]"
-sudo mkdir -p /var/www/html/page
-sudo cp -r * /var/www/html/page
-sudo chmod +x /var/www/html/page/* 
-sudo systemctl start apache2
-sudo systemctl enable apache2
-echo "[**Toxina Ph1shing movido com sucesso!**]"
-$c
-
 # Atualização final e limpeza do sistema
 sudo apt-get update -y && sudo apt-get full-upgrade -y
 sudo apt-get autoremove -y
