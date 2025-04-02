@@ -9,10 +9,10 @@ H00ks_T0x1na is a Phishing (Social Engineering) tool used to remotely control a 
 ### How do I use this tool? 
 ### How do I use this tool? 
 ```
-sudo git clone https://github.com/cesarbtakda/H00ks_T0x1na_Ph1shing.git
+sudo git clone https://github.com/cesarbtakda/H00ks_T0x1na.git
 ```
 ```
-cd H00ks_T0x1na_Ph1shing && sudo bash ./requeriments.sh
+cd H00ks_T0x1na && sudo bash ./requeriments.sh
 ```
 ```
 sudo bash ./setup.sh 
