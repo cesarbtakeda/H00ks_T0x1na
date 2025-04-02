@@ -1,10 +1,10 @@
-# Alpha H00ks_T0x1na_Ph1shing V1.2
+# Alpha H00ks_T0x1na V1.2
 
 <p align='center'>
 <img src="./logo.jpg" width=200 alt=" Logo"/>
 </p>
 <span>
-H00ks_T0x1na_Ph1shing is a Phishing (Social Engineering) tool used to remotely control a computer or a mobile phone from links as a helper. It is written in HTML, CSS, PHP, JavaScript, BashScript and is compatible with Windows, Android and probably iPhone. It was created to be stable, completely open source, easy to use and with many customizable features. Improvements added in the Alpha 1.2 version and correct bugs... Now having an internal API of models, where there will be a "graphical interface" "setup.sh" where the user can choose the Specific social engineering or choose the complete one, number 2 is still under development.... </span> </br> </br>
+H00ks_T0x1na is a Phishing (Social Engineering) tool used to remotely control a computer or a mobile phone from links as a helper. It is written in HTML, CSS, PHP, JavaScript, BashScript and is compatible with Windows, Android and probably iPhone. It was created to be stable, completely open source, easy to use and with many customizable features. Improvements added in the Alpha 1.2 version and correct bugs... Now having an internal API of models, where there will be a "graphical interface" "setup.sh" where the user can choose the Specific social engineering or choose the complete one, number 2 is still under development.... </span> </br> </br>
 
 ### How do I use this tool? 
 ### How do I use this tool? 
@@ -28,7 +28,7 @@ sudo bash ./setup.sh
 Remember that this was made for ethical and moral use, I am not responsible for the misuse of the tool!
 
 
-## What H00ks_T0x1na_Ph1shing Apart
+## What H00ks_T0x1na Apart
 
 H00ks_T0x1na_Ph1shing stands out from the crowd for several reasons:
 
