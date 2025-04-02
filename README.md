@@ -30,7 +30,7 @@ Remember that this was made for ethical and moral use, I am not responsible for 
 
 ## What H00ks_T0x1na Apart
 
-H00ks_T0x1na_Ph1shing stands out from the crowd for several reasons:
+H00ks_T0x1na stands out from the crowd for several reasons:
 
 - **Easy portability**
 - **Totally versatile**
