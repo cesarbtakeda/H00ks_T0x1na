@@ -4,7 +4,7 @@
 <p align='center'>
 <img src="./logo.jpg" width=200 alt=" Logo"/></p>
 
-##  INSTALAÇÃO 
+##  INSTALLATION
 1.
 ```
 git clone https://github.com/cesarbtakda/H00ks_T0x1na.git
@@ -21,14 +21,14 @@ sudo bash ./requeriments.sh
 ```
 sudo python3 setup.py 
 ```
-## FEATURES PRINCIPAIS 
+## MAIN FEATURES
 
-📸 CAPTURA DE MÍDIA:
+📸 MEDIA CAPTURE:
 - Photos in .png (HD)
 - Random names: "XJ8K9-photo.png"
 - Encrypted uploads/ folder
   
-📍 GEOLOCALIZAÇÃO:
+📍 GEOLOCATE:
 - Accurate Latitude/Longitude
 - Internet Service Provider (ISP)
 - Example: [-23.5505, -46.6333]
