@@ -8,7 +8,7 @@ b="--break-system-package"
 
 
 echo "[**Atualizando arquivos...**]"
-sudo apt-get update -y && sudo apt-get full-upgrade -y
+sudo apt-get update -y
 echo "[**Atualização completa**] "
 $c
 
@@ -20,7 +20,6 @@ $i python3
 $i wget
 $i systemctl
 $i apache2
-
 
 
 # Instalando Cloudflare
