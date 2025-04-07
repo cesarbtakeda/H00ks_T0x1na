@@ -1,4 +1,4 @@
-# 🕵️‍♂️ H00ks_T0x1na V1.2 Alpha - Ferramenta
+# 🕵️‍♂️ H00ks_T0x1na V1.3 Alpha - Tool
 
 
 <p align='center'>
@@ -22,39 +22,38 @@ sudo bash ./requeriments.sh
 sudo python3 setup.py 
 ```
 ## FEATURES PRINCIPAIS 
-📸 CAPTURA DE MÍDIA:
-- Fotos em .png (HD)
-- Nomes aleatórios: "XJ8K9-photo.png"
-- Pasta uploads/ criptografada
 
+📸 CAPTURA DE MÍDIA:
+- Photos in .png (HD)
+- Random names: "XJ8K9-photo.png"
+- Encrypted uploads/ folder
+  
 📍 GEOLOCALIZAÇÃO:
-- Latitude/Longitude precisas
-- Provedor de Internet (ISP)
-- Exemplo: [-23.5505, -46.6333]
+- Accurate Latitude/Longitude
+- Internet Service Provider (ISP)
+- Example: [-23.5505, -46.6333]
 
 ⌨️ KEYLOGGER:
-- Registra todas as teclas digitadas
-- Captura Ctrl+C / Ctrl+V
+- Records all keystrokes
+- Captures Ctrl+C / Ctrl+V
 
 ⚡ PAYLOADS:
 - .exe (Windows)
 - .apk (Android)
 - .sh (Linux)
 
+## 🔐 LEGAL NOTICE
+USE PERMITTED ONLY IN:
+- Authorized Pentests
+- Security Labs
+- Academic Research
+- Testing on Authorized Vms!
+  
+## ⚠️ PROHIBITED:
+- Unauthorized access
+- Illegal data collection
 
-
-##  🔐 AVISO LEGAL 
-USO PERMITIDO APENAS EM:
-- Pentests autorizados
-- Laboratórios de segurança
-- Pesquisas acadêmicas
-- Testes em Vms autorizada!
-
-## ⚠️ PROIBIDO:
-- Acesso não autorizado
-- Coleta de dados ilegal
-
-##  IMAGENS 
+##  IMAGES 
 - ![123](https://github.com/user-attachments/assets/02641a79-baf0-4e07-bb58-3f5dae23de48)
 
 - ![1234](https://github.com/user-attachments/assets/0b69595d-dc66-4d52-b5a4-18d89fa57c07)
@@ -65,5 +64,5 @@ USO PERMITIDO APENAS EM:
 [![MIT License](https://img.shields.io/badge/License-MIT-red.svg)](https://github.com/cesarbtakeda/H00ks_T0x1na/blob/main/LICENSE)
 
 
-##  CONTATO 📱
+##  Reports 📱
 [![Reclame-aqui](https://img.shields.io/badge/complain-_here-red)](https://github.com/cesarbtakeda/H00ks_T0x1na/issues)  
