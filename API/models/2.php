@@ -13,7 +13,9 @@
             box-sizing: border-box;
             font-family: "Poppins", sans-serif;
         }
-
+a {
+    style="text-decoration: none;
+  }
         body {
             display: flex;
             justify-content: center;
