@@ -66,4 +66,4 @@ USO PERMITIDO APENAS EM:
 
 
 ##  CONTATO 📱
-[![Reclame-aqui](https://img.shields.io/badge/complain-_here-red)](https://github.com/cesarbtakda/issues)  
+[![Reclame-aqui](https://img.shields.io/badge/complain-_here-red)](https://github.com/cesarbtakeda/H00ks_T0x1na/issues)  
