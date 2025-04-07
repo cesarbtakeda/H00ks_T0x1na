@@ -26,7 +26,7 @@ def setup():
 
 def get_cloudflared_link():
     try:
-        # Método confiável para obter o link real
+        # 
         process = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://localhost:8080"],
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
