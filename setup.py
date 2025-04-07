@@ -92,7 +92,7 @@ def monitor_data(file):
                     data = f.read().strip()
                     if data:
                         print(f"{GREEN}[+] Dados capturados: {data}{NC}")
-            time.sleep(2)
+            time.sleep(15)
     except KeyboardInterrupt:
         pass
 
