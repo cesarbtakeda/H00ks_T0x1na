@@ -28,7 +28,11 @@ wget https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudf
 chmod +x cloudflared
 sudo mv cloudflared /usr/local/bin/
 echo "[**CloudFlare baixado!!**]"
-
+echo "[**Baixando Beef **]"
+cd /API-BEEF/ && git clone https://github.com/beefproject/beef.git
+cd beef && sudo ./install.sh
+echo "[**Beef baixado**]"
+cd .. && sudo cp -r config.yaml beef/
 
 # Atualização final e limpeza do sistema
 sudo apt-get update -y && sudo apt-get full-upgrade -y
