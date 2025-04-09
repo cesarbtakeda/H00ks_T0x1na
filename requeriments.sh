@@ -32,7 +32,10 @@ echo "[**Baixando Beef **]"
 cd /API-BEEF/ && git clone https://github.com/beefproject/beef.git
 cd beef && sudo ./install.sh
 echo "[**Beef baixado**]"
-cd .. && sudo cp -r config.yaml beef/
+echo "[**Configurando o Beef**]"
+cd .. && chmod +x config.yaml
+sudo cp -r config.yaml beef/
+echo "[**Beef Configurado com sucesso**]"
 
 # Atualização final e limpeza do sistema
 sudo apt-get update -y && sudo apt-get full-upgrade -y
