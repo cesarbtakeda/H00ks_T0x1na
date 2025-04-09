@@ -42,6 +42,18 @@ sudo python3 setup.py
 - .apk (Android)
 - .sh (Linux)
 
+🍪 Cookie capture
+- Beef Control Remote
+- Cookie handling
+- Browser hijacking
+
+🌐 Servers
+- Apache2
+- Cloudflared
+- PHP
+- SSH Serveo NET
+- http mirrored on https 🔐
+
 ## 🔐 LEGAL NOTICE
 USE PERMITTED ONLY IN:
 - Authorized Pentests
