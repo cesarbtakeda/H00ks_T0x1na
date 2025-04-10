@@ -19,14 +19,6 @@ $i python3
 $i wget
 $i apache2
 
-# Instalando Ngrok
-echo "[**Baixando Ngrok**]"
-wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz -O ngrok.tgz
-tar -xvzf ngrok.tgz
-chmod +x ngrok
-sudo mv ngrok /usr/local/bin/
-rm ngrok.tgz
-echo "[**Ngrok baixado e instalado com sucesso!!**]"
 
 # Instalando Cloudflared (mantido como no original)
 echo "[**Baixando Cloudflared**]"
