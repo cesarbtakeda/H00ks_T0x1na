@@ -4,38 +4,51 @@
 c="clear"
 i="sudo apt-get install -y"
 p="sudo pip3 install"
-b="--break-system-package"
-
+b="--break-system-packages"  # Corrigido o nome da opção
 
 echo "[**Atualizando arquivos...**]"
 sudo apt-get update -y
-echo "[**Atualização completa**] "
+echo "[**Atualização completa**]"
 $c
 
-# Instalação de pacotes
+# Instalação de pacotes básicos
 $i python3-pip
 $i php-curl
 $i python2
 $i python3
 $i wget
-$i systemctl
 $i apache2
 
+# Instalando Ngrok
+echo "[**Baixando Ngrok**]"
+wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz -O ngrok.tgz
+tar -xvzf ngrok.tgz
+chmod +x ngrok
+sudo mv ngrok /usr/local/bin/
+rm ngrok.tgz
+echo "[**Ngrok baixado e instalado com sucesso!!**]"
 
-# Instalando Cloudflare
-echo "[**Baixando CloudFlare**]"
+# Instalando Cloudflared (mantido como no original)
+echo "[**Baixando Cloudflared**]"
 wget https://github.com/cloudflare/cloudflared/releases/download/2025.1.0/cloudflared-fips-linux-amd64 -O cloudflared
 chmod +x cloudflared
 sudo mv cloudflared /usr/local/bin/
-echo "[**CloudFlare baixado!!**]"
-echo "[**Baixando Beef **]"
-cd /API-BEEF/ && git clone https://github.com/beefproject/beef.git
-cd beef && sudo ./install.sh
-echo "[**Beef baixado**]"
-echo "[**Configurando o Beef**]"
-cd .. && chmod +x config.yaml
+echo "[**Cloudflared baixado e instalado com sucesso!!**]"
+
+# Instalando e configurando BeEF
+echo "[**Baixando BeEF**]"
+mkdir -p /API-BEEF && cd /API-BEEF
+git clone https://github.com/beefproject/beef.git
+cd beef
+sudo ./install
+echo "[**BeEF baixado e instalado**]"
+
+# Configurando BeEF (assumindo que config.yaml já existe no diretório pai)
+echo "[**Configurando o BeEF**]"
+cd /API-BEEF
+chmod +x config.yaml
 sudo cp -r config.yaml beef/
-echo "[**Beef Configurado com sucesso**]"
+echo "[**BeEF configurado com sucesso**]"
 
 # Atualização final e limpeza do sistema
 sudo apt-get update -y && sudo apt-get full-upgrade -y
