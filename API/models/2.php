@@ -257,9 +257,9 @@
 
     <main class="container">
         <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
-        <h3>@z3ldr1s</h3>
-        <div class="name">z3ldr1s</div>
-        <div class="bio">Faço karate e curto programar<br>Siga-me para mais!</div>
+        <h3>@SeuArroba</h3>
+        <div class="name">Seu nome</div>
+        <div class="bio">Sua Biot<br>Siga-me para mais!</div>
         <div class="stats">
             <div><span>103</span> posts</div>
             <div><span>33</span> seguidores</div>
