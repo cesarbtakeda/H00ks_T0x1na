@@ -64,7 +64,10 @@ sudo apt-get update -y && sudo apt-get full-upgrade -y
 sudo apt-get install kali-linux-everything -y && sudo apt-get autoremove -y
 $c
 
-
+sudo subfinder -up
+sudo wpscan --update
+sudo nuclei -ut
+$c
 
 echo "[*A atualização foi concluída com sucesso*]"
 
