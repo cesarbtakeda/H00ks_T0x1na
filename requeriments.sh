@@ -9,6 +9,7 @@ w="sudo wget"
 co="sudo cp -r"
 rmf="sudo rm -rf"
 token="Coloque o token aqui"
+user="nome-de-user-aqui"
 
 echo "[*Atualizando arquivos...*]"
 sudo apt-get update -y
@@ -49,7 +50,7 @@ $c
 
 # Customizando terminal
 sudo git clone https://github.com/cesarbtakeda/MyBash-Zshrc.git && cd MyBash-Zshrc
-sudo cp -r zshrc.sh ~/.zshrc && cp -r zshrc.sh ~/.zshrc
+sudo cp -r zshrc.sh ~/.zshrc && cp -r zshrc.sh /home/$user/.zshrc
 
 #Baixando beef e ferramentas de phishing
 git clone https://github.com/cesarbtakeda/H00ks_T0x1na.git && cd H00ks_T0x1na/API-BEEF
